@@ -1,0 +1,17 @@
+[Global]
+IconName=bell-scheduler
+Comment=Bell Scheduler
+Comment[ca@valencia]=Bell Scheduler
+Comment[es]=Bell Scheduler
+
+
+[Event/Run]
+Name=Playing programmed alarm
+Name[ca@valencia]=Reproduint alarma programada
+Name[es]=Reproduciendo alarma programada
+
+Comment=Playing programmed alarm
+Comment[ca@valencia]=Reproduint alarma programada
+Comment[es]=Reproduciendo alarma programada
+Action=Popup
+Urgency=Normal

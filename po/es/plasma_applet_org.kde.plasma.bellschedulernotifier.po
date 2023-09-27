@@ -1,0 +1,68 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# lliurex <lliurex@lliurex.net>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: http://lliurex.net\n"
+"POT-Creation-Date: 2019-11-14 10:50+0100\n"
+"PO-Revision-Date: 2019-11-14 10:52+0100\n"
+"Last-Translator: lliurex <lliurex@lliurex.net>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../applets/bellschedulernotifier/package/contents/ui/main.qml:43
+#, kde-format
+msgid "Stop the bell now"
+msgstr "Detener la alarma ahora"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:74
+#, kde-format
+msgid "Duration: "
+msgstr "Duración: "
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:80
+#, kde-format
+msgid "Error. Not Available"
+msgstr "Error. No disponible"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:88
+#, kde-format
+msgid "Full reproduction"
+msgstr "Reproducción completa"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:90
+#, kde-format
+msgid " seconds"
+msgstr " segundos"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:98
+#, kde-format
+msgid "Playing the bell:"
+msgstr "Reproduciendo la alarma:"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:101
+#, kde-format
+msgid "Stop now"
+msgstr "Detener ahora"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:106
+#, kde-format
+msgid "The bell has ended:"
+msgstr "La alarma ha finalizado:"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:221
+#, kde-format
+msgid "Bell Scheduler"
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:225
+#, kde-format
+msgid "Playing the scheduled bell"
+msgstr "Reproduciendo la alarma programada"
