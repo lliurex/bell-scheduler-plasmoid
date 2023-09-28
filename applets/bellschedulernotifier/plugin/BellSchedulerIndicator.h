@@ -100,6 +100,8 @@ private:
     QString m_iconName = QStringLiteral("bellschedulernotifier");
     QString m_toolTip;
     QString m_subToolTip;
+    QString notificationTitle;
+    QString notificationBody;
     QFile TARGET_FILE;
     bool is_working=false;
     bool bellToken=false;

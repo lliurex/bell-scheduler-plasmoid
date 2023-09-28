@@ -95,17 +95,17 @@ void BellSchedulerIndicator::showNotification(QString notType,int index){
 
 	}	
 	if (notType=="start"){
-		QString title=i18n("Playing the bell:");
-		QString subtooltip="-"+hour+ " "+bell+"\n-"+duration_label+duration;
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),title,subtooltip,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		notificationTitle=i18n("Playing the bell:");
+		notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	    QString name = i18n("Stop now");
 	    m_bellPlayingNotification->setDefaultAction(name);
 	    m_bellPlayingNotification->setActions({name});
 	    connect(m_bellPlayingNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &BellSchedulerIndicator::stopBell);
 	}else{
-		QString title=i18n("The bell has ended:");
-		QString subtooltip="-"+hour+" "+bell+"\n-"+duration_label+duration;
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),title,subtooltip, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		notificationTitle=i18n("The bell has ended:");
+		notificationBody="- "+hour+" "+bell+"\n- "+duration_label+duration;
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	}    
 
 }
@@ -222,9 +222,8 @@ void BellSchedulerIndicator::changeTryIconState(int state){
 
     if (state==0){
         setStatus(ActiveStatus);
-        const QString subtooltip(i18n("Playing the scheduled bell"));
         setToolTip(tooltip);
-        setSubToolTip(subtooltip);
+        setSubToolTip(notificationTitle+"\n"+notificationBody);
         setIconName("bellschedulernotifier");
        
 
