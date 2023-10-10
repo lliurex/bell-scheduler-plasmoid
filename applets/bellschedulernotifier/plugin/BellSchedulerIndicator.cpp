@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2015 Dominik Haumann <dhaumann@kde.org>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
 #include "BellSchedulerIndicator.h"
 #include "BellSchedulerIndicatorUtils.h"
 
@@ -32,6 +15,7 @@
 
 #include <variant.hpp>
 #include <json.hpp>
+#include <QDebug>
 
 using namespace edupals;
 using namespace std;
@@ -45,7 +29,6 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     , m_utils(new BellSchedulerIndicatorUtils(this))
     
 {
-    
 
     TARGET_FILE.setFileName("/tmp/.BellScheduler/bellscheduler-token");
    	
@@ -57,7 +40,6 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
 
 void BellSchedulerIndicator::worker(){
 
-
     if (!is_working){
         if (BellSchedulerIndicator::TARGET_FILE.exists() ) {
             getBellInfo();
@@ -65,38 +47,15 @@ void BellSchedulerIndicator::worker(){
             
         }
     }        
-
      
 }    
 
 void BellSchedulerIndicator::showNotification(QString notType,int index){
 
-	QString duration_label=i18n("Duration: ");
-	QString bell;
-	QString hour;
-	QString duration;
-		
-	if (m_utils->bellsInfo[index]["duration"].get_int32()==999){
-		QString error=i18n("Error. Not Available");
-		hour=error;
-		bell="";
-		duration=error;
-	}else{
-		hour=QString::fromStdString(m_utils->bellsInfo[index]["hour"]);
-		bell=QString::fromStdString(m_utils->bellsInfo[index]["name"]);
-		if (m_utils->bellsInfo[index]["duration"].get_int32()==0){
-			duration=i18n("Full reproduction");
-		}else{
-			QString label=i18n(" seconds");
-			QString s = QString::number(m_utils->bellsInfo[index]["duration"].get_int32());
-			duration=s+label;
-
-		}	
-
-	}	
+	
 	if (notType=="start"){
 		notificationTitle=i18n("Playing the bell:");
-		notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+		setNotificationBody(index);
 		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	    QString name = i18n("Stop now");
 	    m_bellPlayingNotification->setDefaultAction(name);
@@ -104,7 +63,7 @@ void BellSchedulerIndicator::showNotification(QString notType,int index){
 	    connect(m_bellPlayingNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &BellSchedulerIndicator::stopBell);
 	}else{
 		notificationTitle=i18n("The bell has ended:");
-		notificationBody="- "+hour+" "+bell+"\n- "+duration_label+duration;
+		setNotificationBody(index);
 		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	}    
 
@@ -137,7 +96,6 @@ void BellSchedulerIndicator::isAlive(){
 
 bool BellSchedulerIndicator::areBellsLive(){
 
-
 	auto[bellsLive,removeBells]=m_utils->areBellsLive();
 	variant::Variant tmpList=variant::Variant::create_array(0);
 	if (bellsLive){
@@ -148,19 +106,17 @@ bool BellSchedulerIndicator::areBellsLive(){
 
 				}else{
 					tmpList.append(m_utils->bellsInfo[i]);
-
+					setNotificationBody(i);
+					setSubToolTip(notificationTitle+"\n"+notificationBody);
 				}
 			}
 			m_utils->bellsInfo=tmpList;
 		}
 	}
-
+	
 	return bellsLive;
 
-
 }
-
-
 
 void BellSchedulerIndicator::checkStatus(){
 
@@ -180,14 +136,13 @@ void BellSchedulerIndicator::checkStatus(){
 
 	if (bellToken){
 
-		if (BellSchedulerIndicator::TARGET_FILE.exists()){ 
+		if (BellSchedulerIndicator::TARGET_FILE.exists()){
 			if (checkToken>2){
 				if (m_utils->isTokenUpdated()){
 					checkToken=0;
 					getBellInfo();	
 				}
-			}	
-
+			}
 		}	
 		checkToken=checkToken+1;
 		m_utils->linkBellPid();
@@ -208,13 +163,10 @@ void BellSchedulerIndicator::checkStatus(){
 	
 }
 
-
 BellSchedulerIndicator::TrayStatus BellSchedulerIndicator::status() const
 {
     return m_status;
 }
-
-
 
 void BellSchedulerIndicator::changeTryIconState(int state){
 
@@ -230,16 +182,41 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     }else{
         setStatus(PassiveStatus);
     }
-    
 
+}
 
+void BellSchedulerIndicator::setNotificationBody(int bellId){
+
+	QString hour;
+	QString bell;
+	QString duration;
+	QString duration_label=i18n("Duration: ");
+
+	auto bellData=m_utils->getBellData(bellId);
+
+	duration=bellData[2];
+	if (duration=="error"){
+		duration=i18n("Error. Not Available");
+		hour=duration;
+		bell="";
+	}else{
+		hour=bellData[0];
+		bell=bellData[1];
+		if (duration=="full"){
+			duration=i18n("Full reproduction");
+		}else{
+			QString label=i18n(" seconds");
+			duration=duration+label;
+		}
+	}
+	notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+	
 }
 
 void BellSchedulerIndicator::stopBell(){
 
     m_utils->stopBell();
 }
-
 
 void BellSchedulerIndicator::setStatus(BellSchedulerIndicator::TrayStatus status)
 {

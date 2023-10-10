@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2015 Dominik Haumann <dhaumann@kde.org>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
 #include "BellSchedulerIndicatorUtils.h"
 
 #include <QFile>
@@ -34,6 +17,7 @@
 
 #include <tuple>
 #include <sys/types.h>
+#include <QDebug>
 
 using namespace edupals;
 using namespace std;
@@ -43,7 +27,6 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
     : QObject(parent)
        
 {
-
     n4d::Client client;
     system::User me=system::User::me();
     n4d::auth::Key key=n4d::auth::Key::user_key(me.name);
@@ -57,7 +40,6 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
     BELLS_TOKEN.setFileName("tmp/.BellScheduler/bellscheduler-token");
   
 }    
-
 
 string BellSchedulerIndicatorUtils::getFormatHour(int hour,int minute){
 
@@ -83,14 +65,12 @@ string BellSchedulerIndicatorUtils::getFormatHour(int hour,int minute){
     }
 
    string format_time=format_hour+":"+format_minute;
+   
    return format_time;
 
 }
 
-
-
 variant::Variant BellSchedulerIndicatorUtils::readToken(){
-
 
     bool error=false;
     variant::Variant tmp =variant::Variant::create_array(0);
@@ -179,10 +159,9 @@ void BellSchedulerIndicatorUtils::getBellInfo(){
             bellsInfo.append(token_content[i]);
             
         }   
-    }   
+    } 
 
 }
-
 
 std::tuple<QList<QJsonObject>, QStringList> BellSchedulerIndicatorUtils::getBellPid(){
 
@@ -190,7 +169,7 @@ std::tuple<QList<QJsonObject>, QStringList> BellSchedulerIndicatorUtils::getBell
     QList<QJsonObject>pidInfo;
 
     QProcess process;
-    QString cmd="ps -ef | grep 'ffplay -nodisp -autoexit' | grep -v 'grep'";
+    QString cmd="ps -ef | grep '/usr/bin/BellSchedulerPlayer' | grep -v 'grep'";
     
     process.start("/bin/sh", QStringList()<< "-c" 
                        << cmd);
@@ -216,39 +195,29 @@ std::tuple<QList<QJsonObject>, QStringList> BellSchedulerIndicatorUtils::getBell
                     }
                 }    
                 processed_line=tmp_list;
-                if (processed_line[7].compare("/bin/bash")==0){
-                    if (processed_line[9].compare("/usr/bin/check_holidays.py")==0){
-                        tmp_pid["bellId"]=processed_line[13];
-                    }else{
-                        tmp_pid["bellId"]=processed_line[11];
-
-                    }
-                    tmp_pid["pidParent"]=processed_line[1];
-                    if (pidInfo.length()>0){
-                        for (int i=0;i<pidInfo.length();i++){
-                            if (pidInfo[i]["bellId"]==tmp_pid["bellId"]){
-                                cont=cont+1;
-                            }
+                tmp_pid["bellId"]=processed_line[9];
+                tmp_pid["pidParent"]=processed_line[2];
+                tmp_pid["bellPID"]=processed_line[1];
+                if (pidInfo.length()>0){
+                    for (int i=0;i<pidInfo.length();i++){
+                        if (pidInfo[i]["bellId"]==tmp_pid["bellId"]){
+                            cont=cont+1;
                         }
                     }
-                    if (cont==0){
-                        pidInfo.append(tmp_pid);
-                    }    
+                }
+                if (cont==0){
+                    pidInfo.append(tmp_pid);
+                }
+                if (!bellPid.contains(processed_line[1])){
+                    bellPid.append(processed_line[1]);
 
-                }else{
-                    for (int i=0; i<pidInfo.length();i++){
-                        if (processed_line[2].compare(pidInfo[i]["pidParent"].toString())==0){
-                            pidInfo[i]["bellPID"]=processed_line[1];
-                        }
+                } 
 
-                        bellPid.append(processed_line[1]);    
-                    }
-
-                }    
+               
           }
         }
     }    
-   
+    
     return {pidInfo,bellPid};
 
 }
@@ -279,12 +248,9 @@ std::tuple<bool,QStringList> BellSchedulerIndicatorUtils::areBellsLive(){
 
 void BellSchedulerIndicatorUtils::linkBellPid(){
 
-    
-
     int cont=0;
     auto[pidInfo,bellPid]=getBellPid();
 
-  
     for (int i=0;i<bellsInfo.count();i++){
        QString bellPID=QString::fromStdString(bellsInfo[i]["bellPID"]);
        if (bellPID==""){
@@ -312,7 +278,6 @@ void BellSchedulerIndicatorUtils::linkBellPid(){
 
 bool BellSchedulerIndicatorUtils::isTokenUpdated(){
 
-
     tokenUpdated=false;
 
     QDateTime currentTime=QDateTime::currentDateTime();
@@ -332,4 +297,36 @@ void BellSchedulerIndicatorUtils::stopBell(){
 
     client.call("BellSchedulerManager","stop_bell");
     
+}
+
+QStringList BellSchedulerIndicatorUtils::getBellData(int bellId){
+
+     QStringList bellData;
+     QString hour;
+     QString bell;
+     QString duration;
+
+     if (bellsInfo[bellId]["duration"].get_int32()==999){
+        hour="";
+        bell="";
+        duration="error";
+    }else{
+        hour=QString::fromStdString(bellsInfo[bellId]["hour"]);
+        bell=QString::fromStdString(bellsInfo[bellId]["name"]);
+        if (bellsInfo[bellId]["duration"].get_int32()==0){
+            duration="full";
+        }else{
+            QString s = QString::number(bellsInfo[bellId]["duration"].get_int32());
+            duration=s;
+
+        }   
+
+    } 
+    bellData.append(hour);
+    bellData.append(bell);
+    bellData.append(duration);
+    bellData.append(QString::number(bellPid.count()));
+    
+    return bellData;  
+
 }

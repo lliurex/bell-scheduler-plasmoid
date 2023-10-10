@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bellschedulernotifier \n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2019-11-14 10:50+0100\n"
+"POT-Creation-Date: 2023-10-10 14:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,47 +22,42 @@ msgstr ""
 msgid "Stop the bell now"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:74
-#, kde-format
-msgid "Duration: "
-msgstr ""
-
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:80
-#, kde-format
-msgid "Error. Not Available"
-msgstr ""
-
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:88
-#, kde-format
-msgid "Full reproduction"
-msgstr ""
-
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:90
-#, kde-format
-msgid " seconds"
-msgstr ""
-
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:98
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:57
 #, kde-format
 msgid "Playing the bell:"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:101
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:60
 #, kde-format
 msgid "Stop now"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:106
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:65
 #, kde-format
 msgid "The bell has ended:"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:221
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:173
 #, kde-format
 msgid "Bell Scheduler"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:225
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:193
 #, kde-format
-msgid "Playing the scheduled bell"
+msgid "Duration: "
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:199
+#, kde-format
+msgid "Error. Not Available"
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:206
+#, kde-format
+msgid "Full reproduction"
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:208
+#, kde-format
+msgid " seconds"
 msgstr ""
