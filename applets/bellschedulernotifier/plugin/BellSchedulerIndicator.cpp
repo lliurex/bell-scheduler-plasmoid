@@ -54,17 +54,17 @@ void BellSchedulerIndicator::showNotification(QString notType,int index){
 
 	
 	if (notType=="start"){
-		notificationTitle=i18n("Playing the bell:");
+		notificationStartTitle=i18n("Playing the bell:");
 		setNotificationBody(index);
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationStartTitle,notificationBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	    QString name = i18n("Stop now");
 	    m_bellPlayingNotification->setDefaultAction(name);
 	    m_bellPlayingNotification->setActions({name});
 	    connect(m_bellPlayingNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &BellSchedulerIndicator::stopBell);
 	}else{
-		notificationTitle=i18n("The bell has ended:");
+		notificationEndTitle=i18n("The bell has ended:");
 		setNotificationBody(index);
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationTitle,notificationBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationEndTitle,notificationBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	}    
 
 }
@@ -76,8 +76,9 @@ void BellSchedulerIndicator::getBellInfo(){
 
     for (int i=0;i<m_utils->bellsInfo.count();i++){
     	if (!bellsnotification.contains(QString::fromStdString(m_utils->bellsInfo[i]["bellId"]))){
-    		bellsnotification.push_back(QString::fromStdString(m_utils->bellsInfo[i]["bellId"]));
+    		bellsnotification.append(QString::fromStdString(m_utils->bellsInfo[i]["bellId"]));
  	  		showNotification("start",i);
+ 	  		runningBells=runningBells+1;
  	  	}	
     }
    
@@ -103,15 +104,19 @@ bool BellSchedulerIndicator::areBellsLive(){
 			for (int i=0;i<m_utils->bellsInfo.count();i++){
 				if (removeBells.contains(QString::fromStdString(m_utils->bellsInfo[i]["bellId"]))){
 					showNotification("end",i);
-
+					runningBells=runningBells-1;
 				}else{
 					tmpList.append(m_utils->bellsInfo[i]);
 					setNotificationBody(i);
-					setSubToolTip(notificationTitle+"\n"+notificationBody);
+					setSubToolTip(notificationStartTitle+"\n"+notificationBody);
 				}
 			}
 			m_utils->bellsInfo=tmpList;
+			if (runningBells>1){
+				setWarningSubToolTip();
+			}
 		}
+		
 	}
 	
 	return bellsLive;
@@ -143,7 +148,11 @@ void BellSchedulerIndicator::checkStatus(){
 					getBellInfo();	
 				}
 			}
-		}	
+		}
+		if (runningBells>1){
+        	setWarningSubToolTip();
+        }
+	
 		checkToken=checkToken+1;
 		m_utils->linkBellPid();
 
@@ -159,6 +168,7 @@ void BellSchedulerIndicator::checkStatus(){
 		m_utils->bellsId=emptyList;
 		bellsnotification=emptyList;
 		checkToken=0;
+		runningBells=0;
 	}
 	
 }
@@ -175,7 +185,11 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     if (state==0){
         setStatus(ActiveStatus);
         setToolTip(tooltip);
-        setSubToolTip(notificationTitle+"\n"+notificationBody);
+        if (runningBells==1){
+        	setSubToolTip(notificationStartTitle+"\n"+notificationBody);
+        }else{
+        	setWarningSubToolTip();
+        }
         setIconName("bellschedulernotifier");
        
 
@@ -211,6 +225,13 @@ void BellSchedulerIndicator::setNotificationBody(int bellId){
 	}
 	notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
 	
+}
+
+void BellSchedulerIndicator::setWarningSubToolTip(){
+
+	QString warning=i18n("WARNING: 2 or more bells are played simultaneously");
+    setSubToolTip(notificationStartTitle+"\n"+warning);
+
 }
 
 void BellSchedulerIndicator::stopBell(){

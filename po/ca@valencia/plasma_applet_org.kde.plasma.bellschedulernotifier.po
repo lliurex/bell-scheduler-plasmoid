@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2023-10-10 14:14+0200\n"
-"PO-Revision-Date: 2023-10-10 14:17+0200\n"
+"POT-Creation-Date: 2023-10-11 11:25+0200\n"
+"PO-Revision-Date: 2023-10-11 11:28+0200\n"
 "Last-Translator: lliurex <lliurex@lliurex.net>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: es\n"
@@ -37,27 +37,32 @@ msgstr "Para ara"
 msgid "The bell has ended:"
 msgstr "L'alarma ha finalitzat:"
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:173
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:183
 #, kde-format
 msgid "Bell Scheduler"
 msgstr "Bell Scheduler"
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:193
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:207
 #, kde-format
 msgid "Duration: "
 msgstr "Durada: "
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:199
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:213
 #, kde-format
 msgid "Error. Not Available"
 msgstr "Error. No disponible"
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:206
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:220
 #, kde-format
 msgid "Full reproduction"
 msgstr "Reproducció completa"
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:208
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:222
 #, kde-format
 msgid " seconds"
 msgstr " segons"
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:232
+#, kde-format
+msgid "WARNING: 2 or more bells are played simultaneously"
+msgstr "ATENCIÓ: 2 o més alarmes estan sent reproduïdes de manera simultània"

@@ -76,6 +76,7 @@ private:
     void linkBellPid();
     void showNotification(QString notType, int index);
     void setNotificationBody(int bellId);
+    void setWarningSubToolTip();
 
     QTimer *m_timer = nullptr;
     QTimer *m_timer_run=nullptr;
@@ -84,7 +85,8 @@ private:
     QString m_iconName = QStringLiteral("bellschedulernotifier");
     QString m_toolTip;
     QString m_subToolTip;
-    QString notificationTitle;
+    QString notificationStartTitle;
+    QString notificationEndTitle;
     QString notificationBody;
     QFile TARGET_FILE;
     bool is_working=false;
@@ -92,6 +94,7 @@ private:
     int checkToken=0;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
+    int runningBells=0;
      
 };
 
