@@ -31,7 +31,8 @@ target_link_libraries(bellschedulernotifierplugin
 
 install(FILES plugin/qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/bellschedulernotifier)
 install(TARGETS bellschedulernotifierplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/bellschedulernotifier)
-
+install(FILES "icons/bellschedulernotifier-error.svg"
+        DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
 install(FILES "icons/bellschedulernotifier.svg"
         DESTINATION ${DATAROOTDIR}/usr/share/icons/hicolor/scalable/apps/)
 install(FILES "knotifications5/bellschedulernotifier.notifyrc"

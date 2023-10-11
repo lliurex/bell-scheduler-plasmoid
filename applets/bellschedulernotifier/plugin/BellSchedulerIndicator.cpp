@@ -112,9 +112,7 @@ bool BellSchedulerIndicator::areBellsLive(){
 				}
 			}
 			m_utils->bellsInfo=tmpList;
-			if (runningBells>1){
-				setWarningSubToolTip();
-			}
+			
 		}
 		
 	}
@@ -150,7 +148,10 @@ void BellSchedulerIndicator::checkStatus(){
 			}
 		}
 		if (runningBells>1){
+   	        setIconName("bellschedulernotifier-error");
         	setWarningSubToolTip();
+        }else{
+        	setIconName("bellschedulernotifier");
         }
 	
 		checkToken=checkToken+1;
@@ -186,13 +187,12 @@ void BellSchedulerIndicator::changeTryIconState(int state){
         setStatus(ActiveStatus);
         setToolTip(tooltip);
         if (runningBells==1){
+   	        setIconName("bellschedulernotifier");
         	setSubToolTip(notificationStartTitle+"\n"+notificationBody);
         }else{
+   	        setIconName("bellschedulernotifier-error");
         	setWarningSubToolTip();
         }
-        setIconName("bellschedulernotifier");
-       
-
     }else{
         setStatus(PassiveStatus);
     }
@@ -224,14 +224,13 @@ void BellSchedulerIndicator::setNotificationBody(int bellId){
 		}
 	}
 	notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
-	
+
 }
 
 void BellSchedulerIndicator::setWarningSubToolTip(){
 
 	QString warning=i18n("WARNING: 2 or more bells are played simultaneously");
-    setSubToolTip(notificationStartTitle+"\n"+warning);
-
+	setSubToolTip(notificationStartTitle+"\n"+warning);
 }
 
 void BellSchedulerIndicator::stopBell(){
