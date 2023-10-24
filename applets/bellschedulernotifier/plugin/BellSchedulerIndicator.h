@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFile>
 #include <QThread>
+#include <QFileSystemWatcher>
 
 #include <variant.hpp>
 
@@ -59,10 +60,8 @@ public:
 public slots:
     
     void worker();
-    void getBellInfo();
-    void checkStatus();
     void stopBell();
-
+  
 signals:
    
     void statusChanged();
@@ -72,13 +71,16 @@ signals:
 
 private:
 
+    void initWatcher();
+    void getBellInfo();
+    void checkStatus();
     bool areBellsLive();
     void linkBellPid();
     void showNotification(QString notType, int index);
     void setNotificationBody(int bellId);
     void setWarningSubToolTip();
 
-    QTimer *m_timer = nullptr;
+    /*QTimer *m_timer = nullptr;*/
     QTimer *m_timer_run=nullptr;
     TrayStatus m_status = PassiveStatus;
     QStringList bellsnotification;
@@ -95,6 +97,8 @@ private:
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
     int runningBells=0;
+    QFileSystemWatcher *watcher = nullptr;
+    QString refPath="/tmp/.BellScheduler";
      
 };
 

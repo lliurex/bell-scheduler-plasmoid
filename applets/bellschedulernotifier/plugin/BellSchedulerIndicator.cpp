@@ -9,6 +9,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QFile>
+#include <QFileSystemWatcher>
 #include <QThread>
 #include <QtCore/QStringList>
 #include <QJsonObject>
@@ -24,19 +25,38 @@ using namespace std;
 
 BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     : QObject(parent)
-    , m_timer(new QTimer(this))
+    /*, m_timer(new QTimer(this))*/
     , m_timer_run(new QTimer(this))
     , m_utils(new BellSchedulerIndicatorUtils(this))
     
 {
 
     TARGET_FILE.setFileName("/tmp/.BellScheduler/bellscheduler-token");
-   	
+ 
+    /*
     connect(m_timer, &QTimer::timeout, this, &BellSchedulerIndicator::worker);
     m_timer->start(2000);
     worker();
+    */
+    initWatcher();
+
 }    
 
+void BellSchedulerIndicator::initWatcher(){
+
+    QDir TARGET_DIR(refPath);
+
+	if (!TARGET_DIR.exists()){
+		QDir basePath("/tmp/");
+		basePath.mkdir(".BellScheduler");
+	}else{
+		worker();
+	}
+	watcher=new QFileSystemWatcher(this);
+    connect(watcher,SIGNAL(directoryChanged(QString)),this,SLOT(worker()));
+	watcher->addPath(refPath);
+
+}
 
 void BellSchedulerIndicator::worker(){
 
@@ -186,12 +206,13 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     if (state==0){
         setStatus(ActiveStatus);
         setToolTip(tooltip);
-        if (runningBells==1){
+        if (runningBells>1){
+        	setIconName("bellschedulernotifier-error");
+        	setWarningSubToolTip();
+        }else{
    	        setIconName("bellschedulernotifier");
         	setSubToolTip(notificationStartTitle+"\n"+notificationBody);
-        }else{
-   	        setIconName("bellschedulernotifier-error");
-        	setWarningSubToolTip();
+  	
         }
     }else{
         setStatus(PassiveStatus);
