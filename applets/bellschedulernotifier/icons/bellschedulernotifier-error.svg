@@ -129,7 +129,8 @@
      units="px"
      inkscape:showpageshadow="2"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#d1d1d1"
+     showguides="false" />
   <metadata
      id="metadata7445">
     <rdf:RDF>
@@ -222,12 +223,12 @@
                id="path6368" />
           </g>
           <ellipse
-             style="fill:#ff0000;stroke-width:0.715044"
+             style="fill:#ff0000;stroke-width:0.794493"
              id="path1079"
-             cx="122.14098"
-             cy="38.460072"
-             rx="6.7563643"
-             ry="6.7563653" />
+             cx="122.49444"
+             cy="36.827271"
+             rx="7.5070715"
+             ry="7.5070734" />
         </g>
       </g>
     </g>
