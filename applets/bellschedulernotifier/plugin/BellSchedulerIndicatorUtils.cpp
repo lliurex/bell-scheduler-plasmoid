@@ -13,7 +13,6 @@
 #include <n4d.hpp>
 #include <variant.hpp>
 #include <json.hpp>
-#include <user.hpp>
 
 #include <tuple>
 #include <sys/types.h>
@@ -28,15 +27,7 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
        
 {
     n4d::Client client;
-    system::User me=system::User::me();
-    n4d::auth::Key key=n4d::auth::Key::user_key(me.name);
-    string ticketstr="N4DTKV2 https://127.0.0.1:9779 "+me.name+" "+key.value;
-    n4d::Ticket ticket(ticketstr);
-
-    if (ticket){
-        client=n4d::Client(ticket);
-    }
-
+    client=n4d::Client("https://127.0.0.1:9779");
     BELLS_TOKEN.setFileName("tmp/.BellScheduler/bellscheduler-token");
   
 }    
