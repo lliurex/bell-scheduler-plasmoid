@@ -1,0 +1,5 @@
+usr/lib/*/qt5/qml/org/kde/plasma/private/bellschedulernotifier/
+usr/share/kservices5/plasma-applet-org.kde.plasma.bellschedulernotifier.desktop
+usr/share/metainfo/org.kde.plasma.bellschedulernotifier.appdata.xml
+usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/
+usr/share/locale/*/*/*.mo
