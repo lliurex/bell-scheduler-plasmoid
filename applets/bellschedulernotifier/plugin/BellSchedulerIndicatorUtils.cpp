@@ -286,7 +286,11 @@ bool BellSchedulerIndicatorUtils::isTokenUpdated(){
 
 void BellSchedulerIndicatorUtils::stopBell(){
 
-    client.call("BellSchedulerManager","stop_bell");
+    try{
+        client.call("BellSchedulerManager","stop_bell");
+    }catch(...){
+        
+    }
     
 }
 
