@@ -72,19 +72,18 @@ void BellSchedulerIndicator::worker(){
 
 void BellSchedulerIndicator::showNotification(QString notType,int index){
 
-	
 	if (notType=="start"){
 		notificationStartTitle=i18n("Playing the bell:");
-		setNotificationBody(index);
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationStartTitle,notificationBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		setNotificationBody(index,"play");
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationStartTitle,notificationStartBody,"bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	    QString name = i18n("Stop now");
 	    m_bellPlayingNotification->setDefaultAction(name);
 	    m_bellPlayingNotification->setActions({name});
 	    connect(m_bellPlayingNotification, QOverload<unsigned int>::of(&KNotification::activated), this, &BellSchedulerIndicator::stopBell);
 	}else{
 		notificationEndTitle=i18n("The bell has ended:");
-		setNotificationBody(index);
-		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationEndTitle,notificationBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
+		setNotificationBody(index,"end");
+		m_bellPlayingNotification = KNotification::event(QStringLiteral("Run"),notificationEndTitle,notificationEndBody, "bell-scheduler-indicator", nullptr, KNotification::CloseOnTimeout , QStringLiteral("bellschedulernotifier"));
 	}    
 
 }
@@ -107,7 +106,6 @@ void BellSchedulerIndicator::getBellInfo(){
 void BellSchedulerIndicator::isAlive(){
 
 	bellToken=false;
-	changeTryIconState(0);
 	connect(m_timer_run, &QTimer::timeout, this, &BellSchedulerIndicator::checkStatus);
     m_timer_run->start(1000);
     checkStatus();
@@ -127,8 +125,8 @@ bool BellSchedulerIndicator::areBellsLive(){
 					runningBells=runningBells-1;
 				}else{
 					tmpList.append(m_utils->bellsInfo[i]);
-					setNotificationBody(i);
-					setSubToolTip(notificationStartTitle+"\n"+notificationBody);
+					setNotificationBody(i,"play");
+					setSubToolTip(notificationStartTitle+"\n"+notificationStartBody);
 				}
 			}
 			m_utils->bellsInfo=tmpList;
@@ -146,7 +144,6 @@ void BellSchedulerIndicator::checkStatus(){
 	if (BellSchedulerIndicator::TARGET_FILE.exists() ) { 
 		if (!bellToken){
 			bellToken=true;
-			
 		}
 	}else{
 		if (areBellsLive()){
@@ -173,7 +170,7 @@ void BellSchedulerIndicator::checkStatus(){
         }else{
         	setIconName("bellschedulernotifier");
         }
-	
+        changeTryIconState(0);
 		checkToken=checkToken+1;
 		m_utils->linkBellPid();
 
@@ -204,14 +201,14 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     const QString tooltip(i18n("Bell Scheduler"));
 
     if (state==0){
-        setStatus(ActiveStatus);
+    	setStatus(ActiveStatus);
         setToolTip(tooltip);
         if (runningBells>1){
         	setIconName("bellschedulernotifier-error");
         	setWarningSubToolTip();
         }else{
    	        setIconName("bellschedulernotifier");
-        	setSubToolTip(notificationStartTitle+"\n"+notificationBody);
+        	setSubToolTip(notificationStartTitle+"\n"+notificationStartBody);
   	
         }
     }else{
@@ -220,7 +217,7 @@ void BellSchedulerIndicator::changeTryIconState(int state){
 
 }
 
-void BellSchedulerIndicator::setNotificationBody(int bellId){
+void BellSchedulerIndicator::setNotificationBody(int bellId,QString action){
 
 	QString hour;
 	QString bell;
@@ -244,8 +241,11 @@ void BellSchedulerIndicator::setNotificationBody(int bellId){
 			duration=duration+label;
 		}
 	}
-	notificationBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
-
+	if (action=="play"){
+		notificationStartBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+	}else{
+		notificationEndBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+	}
 }
 
 void BellSchedulerIndicator::setWarningSubToolTip(){

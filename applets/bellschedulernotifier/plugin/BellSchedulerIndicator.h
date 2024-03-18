@@ -77,7 +77,7 @@ private:
     bool areBellsLive();
     void linkBellPid();
     void showNotification(QString notType, int index);
-    void setNotificationBody(int bellId);
+    void setNotificationBody(int bellId,QString action);
     void setWarningSubToolTip();
 
     /*QTimer *m_timer = nullptr;*/
@@ -89,7 +89,8 @@ private:
     QString m_subToolTip;
     QString notificationStartTitle;
     QString notificationEndTitle;
-    QString notificationBody;
+    QString notificationStartBody;
+    QString notificationEndBody;
     QFile TARGET_FILE;
     bool is_working=false;
     bool bellToken=false;
