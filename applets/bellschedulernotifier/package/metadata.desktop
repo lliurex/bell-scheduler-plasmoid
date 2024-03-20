@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=Bell Scheduler Notifier
-Name[ca]=Bell Scheduler Notifier
-Name[ca@valencia]=Bell Scheduler Notifier
-Name[en_GB]=Bell Scheduler Notifier
-Name[es]=Bell Scheduler Notifier
+Name=Bell Scheduler
+Name[ca]=Bell Scheduler
+Name[ca@valencia]=Bell Scheduler
+Name[en_GB]=Bell Scheduler
+Name[es]=Bell Scheduler
 Comment=Display warnings when an alarm is played
 Comment[ca]=Mostra avisos quan es reprodueix una alarma
 Comment[ca@valencia]=Mostra avisos quan es reprodueix una alarma
