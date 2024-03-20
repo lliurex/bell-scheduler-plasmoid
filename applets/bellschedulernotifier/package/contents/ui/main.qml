@@ -1,10 +1,10 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.12
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.12 as Kirigami
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.1 as PlasmaCore
+import org.kde.plasma.components 3.0 as PlasmaComponents3
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 import org.kde.plasma.private.bellschedulernotifier 1.0
 // Item - the most basic plasmoid component, an empty container.
@@ -45,30 +45,18 @@ Item {
     }
 
    
-    //Plasmoid.onActivated: action_bellstop()
+    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    Plasmoid.fullRepresentation: PlasmaComponents3.Page {
+        implicitWidth: PlasmaCore.Units.gridUnit * 12
+        implicitHeight: PlasmaCore.Units.gridUnit * 6
 
-    Plasmoid.fullRepresentation:Item{
-
-        implicitWidth: Kirigami.Units.gridUnit*12
-        implicitHeight: Kirigami.Units.gridUnit*12
-
-        Kirigami.PlaceholderMessage{
-            icon.name:bellSchedulerIndicator.iconName
-            anchors.centerIn:parent
-            width:parent.width
-
-            Row{
-                width:450
-    
-                PC3.Label{
-                    text:bellSchedulerIndicator.subToolTip
-                    font.pointSize:13
-                    font.bold:true
-                    width:450
-                    color:"#6a6d6f"
-                    wrapMode:Text.WordWrap
-                }
-            }
+        PlasmaExtras.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (PlasmaCore.Units.gridUnit * 4)
+            iconName: Plasmoid.icon
+            text:bellSchedulerIndicator.placeHolderText
+            explanation:bellSchedulerIndicator.placeHolderExplanation
+          
         }
     }
 
