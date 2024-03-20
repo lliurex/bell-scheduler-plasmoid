@@ -28,7 +28,6 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
 {
     n4d::Client client;
     client=n4d::Client("https://127.0.0.1:9779");
-    BELLS_TOKEN.setFileName("tmp/.BellScheduler/bellscheduler-token");
   
 }    
 
@@ -66,7 +65,7 @@ variant::Variant BellSchedulerIndicatorUtils::readToken(){
     bool error=false;
     variant::Variant tmp =variant::Variant::create_array(0);
  
-    QFile file("/tmp/.BellScheduler/bellscheduler-token");
+    QFile file(tokenPath);
 
     file.open(QIODevice::ReadOnly);
     QString s;
@@ -264,23 +263,6 @@ void BellSchedulerIndicatorUtils::linkBellPid(){
         }
 
     }
-
-}
-
-bool BellSchedulerIndicatorUtils::isTokenUpdated(){
-
-    tokenUpdated=false;
-
-    QDateTime currentTime=QDateTime::currentDateTime();
-    QDateTime lastModification=QFileInfo(BELLS_TOKEN).lastModified();    
-
-    qint64 millisecondsDiff = lastModification.msecsTo(currentTime);
-
-
-    if (millisecondsDiff<MOD_FRECUENCY){
-        tokenUpdated=true;
-    }
-    return tokenUpdated;
 
 }
 

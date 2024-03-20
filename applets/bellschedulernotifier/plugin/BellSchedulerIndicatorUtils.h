@@ -26,13 +26,10 @@ public:
    void linkBellPid();
    void stopBell();
    std::tuple<bool, QStringList> areBellsLive();
-   bool isTokenUpdated();
    QStringList getBellData(int bellId);
 
    QStringList bellsId;
    variant::Variant bellsInfo =variant::Variant::create_array(0);
-   //bool areBellsLive();
-   bool tokenUpdated=false;
 
 private:    
      
@@ -40,7 +37,7 @@ private:
     std::tuple<QList<QJsonObject>, QStringList> getBellPid();	
     string  getFormatHour(int hour,int minute);
     n4d::Client client;
-    QFile BELLS_TOKEN;
+    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
     qint64 MOD_FRECUENCY=2000;
     QStringList bellPid;
     

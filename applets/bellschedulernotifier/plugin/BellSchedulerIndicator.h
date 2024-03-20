@@ -61,6 +61,7 @@ public slots:
     
     void worker();
     void stopBell();
+    void tokenChanged();
   
 signals:
    
@@ -80,7 +81,6 @@ private:
     void setNotificationBody(int bellId,QString action);
     void setWarningSubToolTip();
 
-    /*QTimer *m_timer = nullptr;*/
     QTimer *m_timer_run=nullptr;
     TrayStatus m_status = PassiveStatus;
     QStringList bellsnotification;
@@ -94,12 +94,12 @@ private:
     QFile TARGET_FILE;
     bool is_working=false;
     bool bellToken=false;
-    int checkToken=0;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
     int runningBells=0;
     QFileSystemWatcher *watcher = nullptr;
     QString refPath="/tmp/.BellScheduler";
+    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
      
 };
 
