@@ -38,16 +38,20 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
 void BellSchedulerIndicator::initWatcher(){
 
     QDir TARGET_DIR(refPath);
+    bool initWorker=false;
 
 	if (!TARGET_DIR.exists()){
 		QDir basePath("/tmp/");
 		basePath.mkdir(".BellScheduler");
 	}else{
-		worker();
+		initWorker=true;
 	}
 	watcher=new QFileSystemWatcher(this);
-    connect(watcher,SIGNAL(directoryChanged(QString)),this,SLOT(worker()));
+	connect(watcher,SIGNAL(directoryChanged(QString)),this,SLOT(worker()));
 	watcher->addPath(refPath);
+	if (initWorker){
+		worker();
+	}
 
 }
 
