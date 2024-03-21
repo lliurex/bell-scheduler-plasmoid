@@ -30,6 +30,9 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     
 {
 
+    QString titleInitHead=i18n("No bell was played");
+    setSubToolTip(titleInitHead);
+    setPlaceHolderText(titleInitHead);
     TARGET_FILE.setFileName(tokenPath);
     initWatcher();
 
