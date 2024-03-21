@@ -1,3 +1,10 @@
+bell-scheduler-indicator (0.16) jammy; urgency=medium
+
+  * Improved general performance
+  * Added full representation in plasmoid
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 21 Mar 2024 08:34:08 +0100
+
 bell-scheduler-indicator (0.15) jammy; urgency=medium
 
   * Initial release as plasmoid
