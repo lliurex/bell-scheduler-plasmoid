@@ -1,9 +1,9 @@
-import QtQuick 2.2
-import QtQuick.Layouts 1.1
-import QtQml.Models 2.3
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+
 import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as Components
+import org.kde.plasma.core 2.1 as PlasmaCore
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 import org.kde.plasma.private.bellschedulernotifier 1.0
@@ -45,25 +45,24 @@ Item {
     }
 
    
-    //Plasmoid.onActivated: action_bellstop()
-    Plasmoid.preferredRepresentation: Plasmoid.compactRepresentation
-    Plasmoid.compactRepresentation: PlasmaCore.IconItem {
-        source: plasmoid.icon
-        MouseArea {
-            anchors.fill: parent
-            //onClicked: action_bellstop()
+    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+    Plasmoid.fullRepresentation: PlasmaComponents3.Page {
+        implicitWidth: PlasmaCore.Units.gridUnit * 12
+        implicitHeight: PlasmaCore.Units.gridUnit * 6
+
+        PlasmaExtras.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (PlasmaCore.Units.gridUnit * 4)
+            iconName: Plasmoid.icon
+            text:bellSchedulerIndicator.placeHolderText
+            explanation:bellSchedulerIndicator.placeHolderExplanation
+          
         }
     }
 
-    Plasmoid.onExpandedChanged: if (Plasmoid.expanded) {
-        action_bellstop()
-    }
-
-    
     function action_bellstop() {
         
         bellSchedulerIndicator.stopBell()
-        /*plasmoid.activated()*/
 
     }
 

@@ -27,6 +27,8 @@ class BellSchedulerIndicator : public QObject
     Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)
     Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
+    Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
+    Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
     Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
     Q_ENUMS(TrayStatus)
 
@@ -51,6 +53,12 @@ public:
     QString subToolTip() const;
     void setSubToolTip(const QString &subToolTip);
 
+    QString placeHolderText() const;
+    void setPlaceHolderText(const QString &placeHolderText);
+
+    QString placeHolderExplanation() const;
+    void setPlaceHolderExplanation(const QString &placeHolderExplanation);
+
     QString iconName() const;
     void setIconName(const QString &name);
 
@@ -61,12 +69,15 @@ public slots:
     
     void worker();
     void stopBell();
+    void tokenChanged();
   
 signals:
    
     void statusChanged();
     void toolTipChanged();
     void subToolTipChanged();
+    void placeHolderTextChanged();
+    void placeHolderExplanationChanged();
     void iconNameChanged();
 
 private:
@@ -77,28 +88,33 @@ private:
     bool areBellsLive();
     void linkBellPid();
     void showNotification(QString notType, int index);
-    void setNotificationBody(int bellId);
+    void setNotificationBody(int bellId,QString action);
     void setWarningSubToolTip();
 
-    /*QTimer *m_timer = nullptr;*/
     QTimer *m_timer_run=nullptr;
     TrayStatus m_status = PassiveStatus;
     QStringList bellsnotification;
     QString m_iconName = QStringLiteral("bellschedulernotifier");
     QString m_toolTip;
     QString m_subToolTip;
+    QString m_placeHolderText;
+    QString m_placeHolderExplanation;
+    QString titleStartHead;
     QString notificationStartTitle;
     QString notificationEndTitle;
-    QString notificationBody;
+    QString notificationStartBody;
+    QString placeHolderExplanationStart;
+    QString notificationEndBody;
     QFile TARGET_FILE;
     bool is_working=false;
     bool bellToken=false;
-    int checkToken=0;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
     int runningBells=0;
+    bool multipleBellsPlayed=false;
     QFileSystemWatcher *watcher = nullptr;
     QString refPath="/tmp/.BellScheduler";
+    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
      
 };
 
