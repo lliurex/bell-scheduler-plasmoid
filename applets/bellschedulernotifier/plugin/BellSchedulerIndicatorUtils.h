@@ -10,6 +10,7 @@
 
 using namespace std;
 using namespace edupals;
+using namespace edupals::variant;
 
 
 class BellSchedulerIndicatorUtils : public QObject
@@ -29,11 +30,11 @@ public:
    QStringList getBellData(int bellId);
 
    QStringList bellsId;
-   variant::Variant bellsInfo =variant::Variant::create_array(0);
+   Variant bellsInfo =Variant::create_array(0);
 
 private:    
      
-	 variant::Variant readToken();
+	Variant readToken();
     std::tuple<QList<QJsonObject>, QStringList> getBellPid();	
     string  getFormatHour(int hour,int minute);
     n4d::Client client;

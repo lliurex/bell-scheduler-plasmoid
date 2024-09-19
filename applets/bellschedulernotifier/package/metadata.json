@@ -1,0 +1,29 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "juapesai@hotmail.com",
+                "Name": "Juan Ramon Pelegrina"
+            }
+        ],
+        "Category": "Utilities",
+        "Description": "Display warnings when an alarm is played",
+        "Description[ca@valencia]": "Mostra avisos quan es reprodueix una alarma",
+        "Description[ca]": "Mostra avisos quan es reprodueix una alarma",
+        "Description[en_GB]":"Display warnings when an alarm is played",
+        "Description[es]": "Muestra avisos cuando se reproduce una alarma",
+        "EnabledByDefault": true,
+        "Icon": "bell-scheduler-indicator",
+        "Id": "org.kde.plasma.bellschedulernotifier",
+        "License": "LGPL",
+        "Name": "Bell Scheduler",
+        "Name[ca@valencia]": "Bell Scheduler",
+        "Name[ca]": "Bell Scheduler",
+        "Name[en_GB]": "Bell Scheduler",
+        "Name[es]": "Bell Scheduler",
+        "Website": "https://lliurex.net/"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-NotificationAreaCategory": "SystemServices"
+}

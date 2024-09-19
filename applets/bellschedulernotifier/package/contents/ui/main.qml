@@ -1,14 +1,16 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.1 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kirigami as Kirigami
 
 import org.kde.plasma.private.bellschedulernotifier 1.0
 // Item - the most basic plasmoid component, an empty container.
-Item {
+
+PlasmoidItem {
 
     id:bellschedulerApplet
     
@@ -31,28 +33,25 @@ Item {
         
     }
 
-    Plasmoid.switchWidth: units.gridUnit * 5
-    Plasmoid.switchHeight: units.gridUnit * 5
+    switchWidth: Kirigami.Units.gridUnit * 5
+    switchHeight: Kirigami.Units.gridUnit * 5
 
     Plasmoid.icon:bellSchedulerIndicator.iconName
-    Plasmoid.toolTipMainText: bellSchedulerIndicator.toolTip
-    Plasmoid.toolTipSubText: bellSchedulerIndicator.subToolTip
+    toolTipMainText: bellSchedulerIndicator.toolTip
+    toolTipSubText: bellSchedulerIndicator.subToolTip
 
     Component.onCompleted: {
-       plasmoid.removeAction("configure");
-       plasmoid.setAction("bellstop", i18n("Stop the bell now"), "media-playback-stop"); 
-                  
+       Plasmoid.setInternalAction("configure", configureAction)
+
     }
 
-   
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
-    Plasmoid.fullRepresentation: PlasmaComponents3.Page {
-        implicitWidth: PlasmaCore.Units.gridUnit * 12
-        implicitHeight: PlasmaCore.Units.gridUnit * 6
+    fullRepresentation: PlasmaComponents3.Page {
+        implicitWidth: Kirigami.Units.gridUnit * 12
+        implicitHeight: Kirigami.Units.gridUnit * 6
 
         PlasmaExtras.PlaceholderMessage {
             anchors.centerIn: parent
-            width: parent.width - (PlasmaCore.Units.gridUnit * 4)
+            width: parent.width - (Kirigami.Units.gridUnit * 4)
             iconName: Plasmoid.icon
             text:bellSchedulerIndicator.placeHolderText
             explanation:bellSchedulerIndicator.placeHolderExplanation
@@ -66,5 +65,11 @@ Item {
 
     }
 
+    PlasmaCore.Action {
+        id: configureAction
+        text: i18n("Stop the bell now")
+        icon.name:"media-playback-stop.svg"
+        onTriggered:action_bellstop()
+    }
     
  }  
