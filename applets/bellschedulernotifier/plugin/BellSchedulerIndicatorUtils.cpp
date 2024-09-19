@@ -19,6 +19,7 @@
 #include <QDebug>
 
 using namespace edupals;
+using namespace edupals::variant;
 using namespace std;
 
 
@@ -60,10 +61,10 @@ string BellSchedulerIndicatorUtils::getFormatHour(int hour,int minute){
 
 }
 
-variant::Variant BellSchedulerIndicatorUtils::readToken(){
+Variant BellSchedulerIndicatorUtils::readToken(){
 
     bool error=false;
-    variant::Variant tmp =variant::Variant::create_array(0);
+    Variant tmp =Variant::create_array(0);
  
     QFile file(tokenPath);
 
@@ -79,12 +80,12 @@ variant::Variant BellSchedulerIndicatorUtils::readToken(){
     file.close();
     
     try{
-        variant::Variant bell_info = client.call("BellSchedulerManager","read_conf");
+        Variant bell_info = client.call("BellSchedulerManager","read_conf");
 
        
         for(int i=0 ; i < bells_id.length() ; i++){
             try{    
-                variant::Variant info=variant::Variant::create_struct();  
+                Variant info=Variant::create_struct();
                 string bellId=bells_id[i].toStdString();
                 int hour=bell_info["data"][bellId]["hour"].get_int32();
                 int minute=bell_info["data"][bellId]["minute"].get_int32();
@@ -111,10 +112,10 @@ variant::Variant BellSchedulerIndicatorUtils::readToken(){
     } 
 
     if (error) {
-        variant::Variant empty =variant::Variant::create_array(0);
+        Variant empty =Variant::create_array(0);
         tmp=empty;
         for(int i=0 ; i < bells_id.length() ; i++){
-            variant::Variant info=variant::Variant::create_struct();  
+            Variant info=Variant::create_struct();
             string bellId=bells_id[i].toStdString();
             info["bellId"]=bellId;
             info["name"]="";
@@ -133,7 +134,7 @@ variant::Variant BellSchedulerIndicatorUtils::readToken(){
 
 void BellSchedulerIndicatorUtils::getBellInfo(){
 
-    variant::Variant token_content = readToken();
+    Variant token_content = readToken();
 
     if (bellsInfo.count()>0){
         for (int i=0;i<bellsInfo.count();i++){
