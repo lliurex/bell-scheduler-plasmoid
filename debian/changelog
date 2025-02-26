@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.27) noble; urgency=medium
+
+  * Improved usability to stopping bells
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 26 Feb 2025 15:46:08 +0100
+
 bell-scheduler-indicator (0.26) noble; urgency=medium
 
   * Initial release for noble
