@@ -352,3 +352,16 @@ void BellSchedulerIndicator::setPlaceHolderExplanation(const QString &placeHolde
         emit placeHolderExplanationChanged();
     }
 }
+
+bool BellSchedulerIndicator::canStopBell(){
+
+	return m_canStopBell;
+}
+
+void BellSchedulerIndicator::setCanStopBell(bool canStopBell){
+
+	if (m_canStopBell!=canStopBell){
+		m_canStopBell=canStopBell;
+		emit canStopBellChanged();	
+	}
+}
