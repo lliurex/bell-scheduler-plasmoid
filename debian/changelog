@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.17) jammy; urgency=medium
+
+  * Improved usability to stopping the bell.
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 26 Feb 2025 14:41:02 +0100
+
 bell-scheduler-indicator (0.16) jammy; urgency=medium
 
   * Improved general performance
