@@ -204,6 +204,7 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     if (state==0){
     	setStatus(ActiveStatus);
         setToolTip(tooltip);
+        setCanStopBell(true);
         if (runningBells>1){
         	setIconName("bellschedulernotifier-error");
         	setWarningSubToolTip();
@@ -216,6 +217,7 @@ void BellSchedulerIndicator::changeTryIconState(int state){
         }
     }else{
         setStatus(PassiveStatus);
+        setCanStopBell(false);
         QString titleEndHead=i18n("Last bell played");
         QString warningEndExplanation=i18n("WARNING: 2 or more bells have played simultaneously");
         notificationStartTitle=titleEndHead+":";
