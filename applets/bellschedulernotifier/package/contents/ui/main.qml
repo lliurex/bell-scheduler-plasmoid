@@ -51,13 +51,24 @@ Item {
         implicitHeight: PlasmaCore.Units.gridUnit * 6
 
         PlasmaExtras.PlaceholderMessage {
+            id:phMsg
             anchors.centerIn: parent
             width: parent.width - (PlasmaCore.Units.gridUnit * 4)
             iconName: Plasmoid.icon
             text:bellSchedulerIndicator.placeHolderText
             explanation:bellSchedulerIndicator.placeHolderExplanation
-          
         }
+        PlasmaComponents3.Button {
+            height:35
+            anchors.top:phMsg.bottom
+            anchors.horizontalCenter:phMsg.horizontalCenter
+            visible:bellSchedulerIndicator.canStopBell?true:false
+            display:AbstractButton.TextBesideIcon
+            icon.name:"media-playback-stop"
+            text:i18n("Stop the bell now")
+            onClicked:bellSchedulerIndicator.stopBell()
+        } 
+        
     }
 
     function action_bellstop() {
