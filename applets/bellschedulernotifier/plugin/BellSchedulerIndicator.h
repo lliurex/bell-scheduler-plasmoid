@@ -30,6 +30,7 @@ class BellSchedulerIndicator : public QObject
     Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
     Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
     Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
+    Q_PROPERTY (bool canStopBell READ canStopBell NOTIFY canStopBellChanged)
     Q_ENUMS(TrayStatus)
 
 public:
@@ -62,6 +63,9 @@ public:
     QString iconName() const;
     void setIconName(const QString &name);
 
+    bool canStopBell();
+    void setCanStopBell(bool);
+
     void isAlive();
 
 
@@ -79,6 +83,7 @@ signals:
     void placeHolderTextChanged();
     void placeHolderExplanationChanged();
     void iconNameChanged();
+    void canStopBellChanged();
 
 private:
 
@@ -99,6 +104,7 @@ private:
     QString m_subToolTip;
     QString m_placeHolderText;
     QString m_placeHolderExplanation;
+    bool m_canStopBell=false;
     QString titleStartHead;
     QString notificationStartTitle;
     QString notificationEndTitle;
