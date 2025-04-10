@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.17.2) jammy; urgency=medium
+
+  * Improved knotifications
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 10 Apr 2025 08:40:58 +0200
+
 bell-scheduler-indicator (0.17.1) jammy; urgency=medium
 
   * Fixed knotifications config to show in valencian
