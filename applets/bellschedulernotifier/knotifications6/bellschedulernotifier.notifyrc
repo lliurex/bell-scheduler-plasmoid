@@ -2,16 +2,19 @@
 IconName=bell-scheduler
 Comment=Bell Scheduler
 Comment[ca@valencia]=Bell Scheduler
+Comment[ca]=Bell Scheduler
 Comment[es]=Bell Scheduler
 
 
 [Event/Run]
 Name=Playing programmed alarm
 Name[ca@valencia]=Reproduint alarma programada
+Name[ca]=Reproduint alarma programada
 Name[es]=Reproduciendo alarma programada
 
-Comment=Playing programmed alarm
-Comment[ca@valencia]=Reproduint alarma programada
-Comment[es]=Reproduciendo alarma programada
+Comment=Occurs when an alarm is played
+Comment[ca@valencia]=Ocorre quan es reproduïx una alarma
+Comment[ca]=Ocorre quan es reproduïx una alarma
+Comment[es]=Ocurre cuando se reproduce una alarma
 Action=Popup
 Urgency=Normal
