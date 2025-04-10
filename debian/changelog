@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.27.1) noble; urgency=medium
+
+  * Fixed knotifications
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 10 Apr 2025 08:32:45 +0200
+
 bell-scheduler-indicator (0.27) noble; urgency=medium
 
   * Improved usability to stopping bells
