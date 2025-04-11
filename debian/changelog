@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.17.3) jammy; urgency=medium
+
+  * Fixed import in qml file
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 11 Apr 2025 09:25:51 +0200
+
 bell-scheduler-indicator (0.17.2) jammy; urgency=medium
 
   * Improved knotifications
