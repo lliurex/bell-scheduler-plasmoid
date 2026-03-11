@@ -154,7 +154,7 @@ void BellSchedulerIndicatorUtils::readToken(){
             QString tmpLine = content.readLine().trimmed();
             
             if (!tmpLine.isEmpty()) {
-                QStringList tmpBell = tmpLine.split("-");
+                QStringList tmpBell = tmpLine.split("###");
                 
                 if (tmpBell.size() == 4) {
                     QString bellId = tmpBell[0];

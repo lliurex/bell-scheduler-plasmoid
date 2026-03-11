@@ -4,8 +4,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QFile>
-
-
+#include <QMap>
 #include <n4d.hpp>
 
 using namespace std;
