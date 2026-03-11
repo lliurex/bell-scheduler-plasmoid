@@ -19,6 +19,10 @@ set -e
 
 case "$1" in
     configure)
+
+        newVersion=$(dpkg-query --showformat='${Version}' --show bell-scheduler-indicator)
+        tokenDir=/var/lib/bell-scheduler-indicator/version
+        echo "$newVersion" > "$tokenDir" || true
    
     ;;
 
