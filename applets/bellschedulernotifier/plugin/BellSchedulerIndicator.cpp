@@ -29,8 +29,8 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     setSubToolTip(titleInitHead);
     setPlaceHolderText(titleInitHead);
     connect(m_utils,&BellSchedulerIndicatorUtils::startWidgetFinished,this,&BellSchedulerIndicator::handleStartFinished);
-    connect(m_utils,&BellSchedulerIndicatorUtils::getBellInfoFinished,this,&BellSchedulerIndicator::handleGetInfoFinished);
-    connect(m_utils,&BellSchedulerIndicatorUtils::bellPidsReady,this,&BellSchedulerIndicator::hangleCheckStatusFinished);
+    connect(m_utils,&BellSchedulerIndicatorUtils::readBellTokenFinished,this,&BellSchedulerIndicator::handleBellTokenFinished);
+    connect(m_utils,&BellSchedulerIndicatorUtils::getRunningBellsFinished,this,&BellSchedulerIndicator::handleGetRunningBellsFinished);
     connect(m_utils,&BellSchedulerIndicatorUtils::requestCloseNotification,this,&BellSchedulerIndicator::showNotification);
     connect(m_utils,&BellSchedulerIndicatorUtils::stopBellFinished,this,&BellSchedulerIndicator::handleStopBellFinished);
     m_utils->startWidget();
@@ -61,7 +61,7 @@ void BellSchedulerIndicator::worker(){
     	if (!watcher->files().contains(TARGET_FILE.absoluteFilePath())){
     		watcher->addPath(TARGET_FILE.absoluteFilePath());
     	}
-        if (!is_working){
+        if (!isWorking){
             getBellInfo();
         }
     }    
@@ -72,7 +72,7 @@ void BellSchedulerIndicator::tokenChanged(){
 
 	TARGET_FILE.refresh();
 	if (TARGET_FILE.exists()){
-		if (!is_working){
+		if (!isWorking){
 			getBellInfo();
 		}
 	}
@@ -99,11 +99,11 @@ void BellSchedulerIndicator::showNotification(QString notType,QString bellId){
 
 void BellSchedulerIndicator::getBellInfo(){
 
-   	is_working=true;
-   	m_utils->getBellInfo();
+   	isWorking=true;
+   	m_utils->readBellToken();
 }
 
-void BellSchedulerIndicator::handleGetInfoFinished(){
+void BellSchedulerIndicator::handleBellTokenFinished(){
 
     QStringList keys = m_utils->bellsInfo.keys();
     for (const QString &bellId : keys) {
@@ -115,11 +115,11 @@ void BellSchedulerIndicator::handleGetInfoFinished(){
   			}
         }
     }
-    is_working=false;
+    isWorking=false;
     if (m_utils->bellsInfo.size()>0){
    		changeTryIconState(0);
-   		if (!is_alive_working){
-   			is_alive_working=true;
+   		if (!isAliveWorking){
+   			isAliveWorking=true;
    			isAlive();
    		}
     }
@@ -131,19 +131,19 @@ void BellSchedulerIndicator::isAlive(){
 
 	bellToken=false;
 	changeTryIconState(0);
-	connect(m_timer_run, &QTimer::timeout, this, &BellSchedulerIndicator::checkStatus);
+	connect(m_timer_run, &QTimer::timeout, this, &BellSchedulerIndicator::checkRunningBells);
 	m_timer_run->start(1000);
-	checkStatus();
+	checkRunningBells();
 
 }
 
-void BellSchedulerIndicator::checkStatus(){
+void BellSchedulerIndicator::checkRunningBells(){
 	
-	m_utils->getBellsPid();
+	m_utils->getRunningBells();
 	
 }
 
-void BellSchedulerIndicator::hangleCheckStatusFinished(QList<QJsonObject> pidInfo, QStringList bellsPid){
+void BellSchedulerIndicator::handleGetRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid){
 
 	TARGET_FILE.refresh();
 	if (TARGET_FILE.exists() ) { 
@@ -181,8 +181,8 @@ void BellSchedulerIndicator::hangleCheckStatusFinished(QList<QJsonObject> pidInf
 		m_utils->bellsInfo.clear();			
 		m_timer_run->stop();
 		changeTryIconState(1);
-		is_working=false;
-		is_alive_working=false;
+		isWorking=false;
+		isAliveWorking=false;
 		QStringList emptyList;
 		bellsnotification=emptyList;
 		runningBells=0;
@@ -235,7 +235,7 @@ void BellSchedulerIndicator::setNotificationBody(QString bellId,QString action){
 	QString hour;
 	QString bell;
 	QString duration;
-	QString duration_label=i18n("Duration: ");
+	QString durationLabel=i18n("Duration: ");
 
 	auto bellData=m_utils->getBellData(bellId);
 
@@ -255,10 +255,10 @@ void BellSchedulerIndicator::setNotificationBody(QString bellId,QString action){
 		}
 	}
 	if (action=="start"){
-		notificationStartBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
-		placeHolderExplanationStart=hour+ " "+bell+"\n"+duration_label+duration;
+		notificationStartBody="- "+hour+ " "+bell+"\n- "+durationLabel+duration;
+		placeHolderExplanationStart=hour+ " "+bell+"\n"+durationLabel+duration;
 	}else{
-		notificationEndBody="- "+hour+ " "+bell+"\n- "+duration_label+duration;
+		notificationEndBody="- "+hour+ " "+bell+"\n- "+durationLabel+duration;
 	}
 }
 

@@ -26,16 +26,16 @@ public:
    QMap<QString, QVariantMap> bellsInfo;
 
    void startWidget();
-   void getBellInfo();
-   void getBellsPid();   
+   void readBellToken();
+   void getRunningBells();   
    void syncBellInfo(QList<QJsonObject> pidInfo, QStringList bellsPid);
    void stopBell();
    QStringList getBellData(QString bellId);
 
   signals:
       void startWidgetFinished(bool startOk,bool initWorker);
-      void getBellInfoFinished();
-      void bellPidsReady(QList<QJsonObject> pidInfo, QStringList bellsPid);
+      void readBellTokenFinished();
+      void getRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
       void requestCloseNotification(QString notType, QString bellId);
       void stopBellFinished();
 

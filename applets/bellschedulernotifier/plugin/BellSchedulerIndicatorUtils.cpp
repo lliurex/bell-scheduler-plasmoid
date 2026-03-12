@@ -124,7 +124,7 @@ QString BellSchedulerIndicatorUtils::getInstalledVersion(){
 
 }
 
-void BellSchedulerIndicatorUtils::getBellInfo(){
+void BellSchedulerIndicatorUtils::readBellToken(){
 
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
 
@@ -135,7 +135,7 @@ void BellSchedulerIndicatorUtils::getBellInfo(){
         }
         safeThis->readToken();
         if (safeThis){
-            emit safeThis->getBellInfoFinished();
+            emit safeThis->readBellTokenFinished();
         }
     });
 
@@ -175,7 +175,7 @@ void BellSchedulerIndicatorUtils::readToken(){
     }
 }
 
-void BellSchedulerIndicatorUtils::getBellsPid(){
+void BellSchedulerIndicatorUtils::getRunningBells(){
 
     if (m_process && m_process->state() != QProcess::NotRunning) {
         return;
@@ -211,7 +211,7 @@ void BellSchedulerIndicatorUtils::getBellsPid(){
                 }
             }   
         }
-        emit bellPidsReady(pidInfo, bellsPid);
+        emit getRunningBellsFinished(pidInfo, bellsPid);
         m_process->deleteLater();
         m_process=nullptr;
     });
@@ -295,7 +295,7 @@ QStringList BellSchedulerIndicatorUtils::getBellData(QString bellId){
     bellData.append(hour);
     bellData.append(bell);
     bellData.append(duration);
-
+    
     return bellData;  
 
 }

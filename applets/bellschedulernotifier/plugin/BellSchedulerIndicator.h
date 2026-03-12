@@ -89,9 +89,7 @@ private:
 
     void initWatcher();
     void getBellInfo();
-    void checkStatus();
-    bool areBellsLive();
-    void linkBellPid();
+    void checkRunningBells();
     void setNotificationBody(QString bellId,QString action);
     void setWarningSubToolTip();
 
@@ -111,8 +109,8 @@ private:
     QString placeHolderExplanationStart;
     QString notificationEndBody;
     QFileInfo TARGET_FILE;
-    bool is_alive_working=false;
-    bool is_working=false;
+    bool isAliveWorking=false;
+    bool isWorking=false;
     bool bellToken=false;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
@@ -124,8 +122,8 @@ private:
     private slots:
     
     void handleStartFinished(bool startOk, bool initWorker);
-    void handleGetInfoFinished();
-    void hangleCheckStatusFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
+    void handleBellTokenFinished();
+    void handleGetRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
     void showNotification(QString notType, QString bellId);
     void handleStopBellFinished();
  
