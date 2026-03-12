@@ -9,6 +9,8 @@
 #include <QFile>
 #include <QThread>
 #include <QFileSystemWatcher>
+#include <QList>
+#include <QJsonObject>
 
 #include <variant.hpp>
 
@@ -92,8 +94,7 @@ private:
     void checkStatus();
     bool areBellsLive();
     void linkBellPid();
-    void showNotification(QString notType, int index);
-    void setNotificationBody(int bellId,QString action);
+    void setNotificationBody(QString bellId,QString action);
     void setWarningSubToolTip();
 
     QTimer *m_timer_run=nullptr;
@@ -111,7 +112,8 @@ private:
     QString notificationStartBody;
     QString placeHolderExplanationStart;
     QString notificationEndBody;
-    QFile TARGET_FILE;
+    QFileInfo TARGET_FILE;
+    bool is_alive_working=false;
     bool is_working=false;
     bool bellToken=false;
     BellSchedulerIndicatorUtils* m_utils;
@@ -119,10 +121,17 @@ private:
     int runningBells=0;
     bool multipleBellsPlayed=false;
     QFileSystemWatcher *watcher = nullptr;
-    QString refPath="/tmp/.BellScheduler";
-    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
-     
+    bool stopBellLaunched=false;
+
+    private slots:
+    
+    void handleStartFinished(bool startOk, bool initWorker);
+    void handleGetInfoFinished();
+    void hangleCheckStatusFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
+    void showNotification(QString notType, QString bellId);
+    void handleStopBellFinished();
+ 
 };
 
 
-#endif // PLASMA_LLIUREX_DISK_QUOTA_H
+#endif // PLASMA_BELL_SCHEDULER_INDICATOR_H
