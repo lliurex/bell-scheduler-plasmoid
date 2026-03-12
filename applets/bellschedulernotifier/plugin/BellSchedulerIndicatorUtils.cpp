@@ -295,8 +295,7 @@ QStringList BellSchedulerIndicatorUtils::getBellData(QString bellId){
     bellData.append(hour);
     bellData.append(bell);
     bellData.append(duration);
-    bellData.append(QString::number(bellPid.count()));
-    
+
     return bellData;  
 
 }

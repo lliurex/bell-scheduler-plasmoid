@@ -44,8 +44,6 @@ private:
    QString user;
    n4d::Client client;
     
-   qint64 MOD_FRECUENCY=2000;
-   QStringList bellPid;
    QProcess *m_process = nullptr;
     
    void cleanCache();
