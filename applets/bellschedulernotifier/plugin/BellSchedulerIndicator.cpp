@@ -80,8 +80,8 @@ void BellSchedulerIndicator::tokenChanged(){
 void BellSchedulerIndicator::showNotification(QString notType,QString bellId){
 
 	if (notType=="start"){
-		titleStartHead=i18n("Playing the bell");
-		notificationStartTitle=titleStartHead+":";
+		titleStartHead=i18n("Playing the bell:");
+		notificationStartTitle=titleStartHead";
 		setNotificationBody(bellId,"start");
 		m_bellPlayingNotification = new KNotification(QStringLiteral("Run"),KNotification::CloseOnTimeout,this);
 		m_bellPlayingNotification->setComponentName(QStringLiteral("bellschedulernotifier"));
@@ -224,9 +224,9 @@ void BellSchedulerIndicator::changeTryIconState(int state){
     }else{
         setStatus(PassiveStatus);
         setCanStopBell(false);
-        QString titleEndHead=i18n("Last bell played");
+        QString titleEndHead=i18n("Last bell played:");
         QString warningEndExplanation=i18n("WARNING: 2 or more bells have played simultaneously");
-        notificationStartTitle=titleEndHead+":";
+        notificationStartTitle=titleEndHead;
         if (multipleBellsPlayed){
         	setSubToolTip(notificationStartTitle+"\n"+warningEndExplanation);
         	setPlaceHolderExplanation(warningEndExplanation);
@@ -242,6 +242,7 @@ void BellSchedulerIndicator::setNotificationBody(QString bellId,QString action){
 
 	QString hour;
 	QString bell;
+	QString bellLabel=i18n("Name: ");
 	QString duration;
 	QString durationLabel=i18n("Duration: ");
 
@@ -263,10 +264,10 @@ void BellSchedulerIndicator::setNotificationBody(QString bellId,QString action){
 		}
 	}
 	if (action=="start"){
-		notificationStartBody="- "+hour+ " "+bell+"\n- "+durationLabel+duration;
-		placeHolderExplanationStart=hour+ " "+bell+"\n"+durationLabel+duration;
+		notificationStartBody="- "+bellLabel+hour+ " -  "+bell+"\n- "+durationLabel+duration;
+		placeHolderExplanationStart=bellLabel+hour+ " -  "+bell+"\n"+durationLabel+duration;
 	}else{
-		notificationEndBody="- "+hour+ " "+bell+"\n- "+durationLabel+duration;
+		notificationEndBody="- "+bellLabel+hour+ " "+bell+"\n- "+durationLabel+duration;
 	}
 }
 

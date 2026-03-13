@@ -55,9 +55,8 @@ PlasmoidItem {
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.gridUnit * 4)
             iconName: Plasmoid.icon
-            text:bellSchedulerIndicator.placeHolderText
-            explanation:bellSchedulerIndicator.placeHolderExplanation
-          
+            text:bellSchedulerIndicator.placeHolderText+"\n"+bellSchedulerIndicator.placeHolderExplanation
+            /*explanation:bellSchedulerIndicator.placeHolderExplanation*/
         }
         PlasmaComponents3.Button {
             height:35

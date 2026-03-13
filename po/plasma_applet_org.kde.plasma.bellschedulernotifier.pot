@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bellschedulernotifier \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 14:19+0100\n"
+"POT-Creation-Date: 2026-03-13 11:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../applets/bellschedulernotifier/package/contents/ui/main.qml:69 ../applets/bellschedulernotifier/package/contents/ui/main.qml:83
+#: ../applets/bellschedulernotifier/package/contents/ui/main.qml:68 ../applets/bellschedulernotifier/package/contents/ui/main.qml:82
 #, kde-format
 msgid "Stop the bell now"
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:83
 #, kde-format
-msgid "Playing the bell"
+msgid "Playing the bell:"
 msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:91
@@ -49,7 +49,7 @@ msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:227
 #, kde-format
-msgid "Last bell played"
+msgid "Last bell played:"
 msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:228
@@ -57,27 +57,32 @@ msgstr ""
 msgid "WARNING: 2 or more bells have played simultaneously"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:246
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:245
+#, kde-format
+msgid "Name: "
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:247
 #, kde-format
 msgid "Duration: "
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:252
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:253
 #, kde-format
 msgid "Error. Not Available"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:259
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:260
 #, kde-format
 msgid "Full reproduction"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:261
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:262
 #, kde-format
 msgid " seconds"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:275
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:276
 #, kde-format
 msgid "WARNING: 2 or more bells are played simultaneously"
 msgstr ""
