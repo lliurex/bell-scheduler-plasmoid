@@ -155,17 +155,21 @@ void BellSchedulerIndicatorUtils::readToken(){
             
             if (!tmpLine.isEmpty()) {
                 QStringList tmpBell = tmpLine.split("###");
-                
-                if (tmpBell.size() == 4) {
-                    QString bellId = tmpBell[0];
-
-                    if (!bellsInfo.contains(bellId)) {
+                QString bellId = tmpBell[0];
+                if (!bellId.isEmpty()){
+                   if (!bellsInfo.contains(bellId)) {
                         QVariantMap info;
-                        info["name"]     = tmpBell[1];
-                        info["hour"]     = tmpBell[2];
-                        info["duration"] = tmpBell[3].toInt();
-                        info["bellPID"]  = "";
-
+                        if (tmpBell.size() == 4) {
+                            info["name"] = tmpBell[1];
+                            info["hour"] = tmpBell[2];
+                            info["duration"] = tmpBell[3].toInt();
+                            info["bellPID"] = "";
+                        }else{
+                            info["name"] = "";
+                            info["hour"] = "";
+                            info["duration"] = 999;
+                            info["bellPID"] = "";
+                        }
                         bellsInfo.insert(bellId, info);
                     }
                 }

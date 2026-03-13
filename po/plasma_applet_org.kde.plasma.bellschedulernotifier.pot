@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bellschedulernotifier \n"
 "Report-Msgid-Bugs-To: http://lliurex.net\n"
-"POT-Creation-Date: 2026-03-12 14:25+0100\n"
+"POT-Creation-Date: 2026-03-13 11:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:84
 #, kde-format
-msgid "Playing the bell"
+msgid "Playing the bell:"
 msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:88
@@ -49,7 +49,7 @@ msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:219
 #, kde-format
-msgid "Last bell played"
+msgid "Last bell played:"
 msgstr ""
 
 #: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:220
@@ -57,27 +57,32 @@ msgstr ""
 msgid "WARNING: 2 or more bells have played simultaneously"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:238
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:237
+#, kde-format
+msgid "Name: "
+msgstr ""
+
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:239
 #, kde-format
 msgid "Duration: "
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:244
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:245
 #, kde-format
 msgid "Error. Not Available"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:251
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:252
 #, kde-format
 msgid "Full reproduction"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:253
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:254
 #, kde-format
 msgid " seconds"
 msgstr ""
 
-#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:267
+#: ../applets/bellschedulernotifier/plugin/BellSchedulerIndicator.cpp:268
 #, kde-format
 msgid "WARNING: 2 or more bells are played simultaneously"
 msgstr ""
