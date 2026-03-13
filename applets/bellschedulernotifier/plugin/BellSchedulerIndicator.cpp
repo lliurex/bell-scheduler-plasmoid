@@ -81,7 +81,7 @@ void BellSchedulerIndicator::showNotification(QString notType,QString bellId){
 
 	if (notType=="start"){
 		titleStartHead=i18n("Playing the bell:");
-		notificationStartTitle=titleStartHead";
+		notificationStartTitle=titleStartHead;
 		setNotificationBody(bellId,"start");
 		m_bellPlayingNotification = new KNotification(QStringLiteral("Run"),KNotification::CloseOnTimeout,this);
 		m_bellPlayingNotification->setComponentName(QStringLiteral("bellschedulernotifier"));
