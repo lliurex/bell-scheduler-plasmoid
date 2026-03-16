@@ -26,7 +26,8 @@ Item {
                 return PlasmaCore.Types.ActiveStatus
             case BellSchedulerIndicator.PassiveStatus:
                 return PlasmaCore.Types.PassiveStatus
-           
+           case BellSchedulerIndicator.HiddenStatus:
+                return PlasmaCore.Types.HiddenStatus
         }
         return  PlasmaCore.Types.ActiveStatus
         
