@@ -44,7 +44,6 @@ void BellSchedulerIndicatorUtils::startWidget(){
         bool initWorker=false;
 
         try{
-            safeThis->client=n4d::Client("https://127.0.0.1:9779");
             if (!QFileInfo::exists(safeThis->refPath)){
                 QDir basePath("/tmp/");
                 basePath.mkdir(".BellScheduler");
@@ -200,7 +199,8 @@ void BellSchedulerIndicatorUtils::stopBell(){
         }
         safeThis->readToken();
         try{
-            safeThis->client.call("BellSchedulerManager","stop_bell");
+            n4d::Client client=n4d::Client("https://127.0.0.1:9779");
+            client.call("BellSchedulerManager","stop_bell");
         }catch(std::exception&e){
             qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell. Error: "<<e.what();
         }

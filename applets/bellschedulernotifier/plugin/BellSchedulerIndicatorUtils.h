@@ -41,12 +41,9 @@ public:
 
 private:    
      
-   n4d::Client client;
-    
    QProcess *m_process = nullptr;
     
    void readToken();
-   string  getFormatHour(int hour,int minute);
      
 };
 
