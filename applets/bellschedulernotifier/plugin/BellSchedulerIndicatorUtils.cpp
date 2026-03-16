@@ -32,10 +32,10 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
 
 void BellSchedulerIndicatorUtils::startWidget(){
 
+    QString tmpPath=this->refPath;
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
 
-    QtConcurrent::run([safeThis]() {
-
+    QtConcurrent::run([safeThis,tmpPath]() {
         if (!safeThis){
             return;
         }
@@ -44,7 +44,7 @@ void BellSchedulerIndicatorUtils::startWidget(){
         bool initWorker=false;
 
         try{
-            if (!QFileInfo::exists(safeThis->refPath)){
+            if (!QFileInfo::exists(tmpPath)){
                 QDir basePath("/tmp/");
                 basePath.mkdir(".BellScheduler");
             }else{
