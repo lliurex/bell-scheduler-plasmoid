@@ -24,11 +24,12 @@ case "$1" in
         tokenDir=/var/lib/bell-scheduler-indicator/version
         echo "$newVersion" > "$tokenDir" || true
 
-        QML_FILE="/usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/contents/ui/main.qml"
+        QML_DIR="/usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/contents/ui"
 
-        if [ -f "$QML_FILE" ];then
-            touch /usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/contents/ui/main.qml || true
+        if [ -d "$QML_DIR" ];then
+            find "$QML_DIR" -name "*.qml" -exec touch {} + || true
         fi
+        
         QML_DIR="/usr/lib/x86_64-linux-gnu/qt5/qml/org/kde/plasma/private/bellschedulernotifier"
 
         if [ -d "$QML_DIR" ];then
