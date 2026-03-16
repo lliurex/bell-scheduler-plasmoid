@@ -1,3 +1,10 @@
+bell-scheduler-indicator (0.17.5) jammy; urgency=medium
+
+  * Fixed metadata.desktop
+  * Fixed postinstall script 
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 16 Mar 2026 17:37:44 +0100
+
 bell-scheduler-indicator (0.17.4) jammy; urgency=medium
 
   * Changed method to get get bell info: read bell token instead n4d call
