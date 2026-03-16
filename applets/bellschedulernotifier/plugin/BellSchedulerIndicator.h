@@ -35,7 +35,7 @@ public:
     enum TrayStatus {
         ActiveStatus=0,
         PassiveStatus,
-	HiddenStatus
+	    HiddenStatus
     };
     Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)

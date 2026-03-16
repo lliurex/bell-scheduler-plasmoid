@@ -1,7 +1,7 @@
 {
     "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
-        "Version":"2.1.0",
+        "Version":"2.0.0",
         "Authors": [
             {
                 "Email": "juapesai@hotmail.com",
@@ -31,7 +31,7 @@
         {
             "type":"qml",
             "identifier": "org.kde.plasma.private.bellschedulernotifier",
-            "version":"2.1"
+            "version":"2.0"
         }
     ]
 

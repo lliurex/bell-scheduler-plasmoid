@@ -8,7 +8,7 @@ plasma_install_package(package org.kde.plasma.bellschedulernotifier)
 # Notes Library
 set(PLUGIN_TARGET "bellschedulernotifierplugin")
 add_definitions(-DTRANSLATION_DOMAIN="plasma_applet_org.kde.plasma.bellschedulernotifier")
-ecm_add_qml_module(${PLUGIN_TARGET} URI org.kde.plasma.private.bellschedulernotifier VERSION 2.1)
+ecm_add_qml_module(${PLUGIN_TARGET} URI org.kde.plasma.private.bellschedulernotifier VERSION 2.0)
 
 target_sources(${PLUGIN_TARGET} PRIVATE
     plugin/plugin.cpp

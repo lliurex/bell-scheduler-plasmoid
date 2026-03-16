@@ -34,8 +34,9 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
 void BellSchedulerIndicatorUtils::startWidget(){
 
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
+    QString tmpPath=this->refPath;
 
-    QThreadPool::globalInstance()->start([safeThis](){
+    QThreadPool::globalInstance()->start([safeThis,tmpPath](){
 
         if (!safeThis){
             return;
@@ -45,9 +46,7 @@ void BellSchedulerIndicatorUtils::startWidget(){
         bool initWorker=false;
 
         try{
-            /*safeThis->cleanCache();*/
-            safeThis->client=n4d::Client("https://127.0.0.1:9779");
-            if (!QFileInfo::exists(safeThis->refPath)){
+            if (!QFileInfo::exists(safeThis->tmpPath)){
                 QDir basePath("/tmp/");
                 basePath.mkdir(".BellScheduler");
             }else{
@@ -63,65 +62,6 @@ void BellSchedulerIndicatorUtils::startWidget(){
         }
 
     });
-}
-
-void BellSchedulerIndicatorUtils::cleanCache(){
-
-    qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Clean cache";
-    QFile CURRENT_VERSION_TOKEN;
-    QDir cacheDir("/home/"+user+"/.cache/plasmashell/qmlcache");
-    QString currentVersion="";
-    bool clear=false;
-
-    CURRENT_VERSION_TOKEN.setFileName("/home/"+user+"/.config/bell-scheduler-widget.conf");
-    QString installedVersion=getInstalledVersion();
-
-    if (!CURRENT_VERSION_TOKEN.exists()){
-        if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
-            QTextStream data(&CURRENT_VERSION_TOKEN);
-            data<<installedVersion;
-            CURRENT_VERSION_TOKEN.close();
-            clear=true;
-        }
-    }else{
-        if (CURRENT_VERSION_TOKEN.open(QIODevice::ReadOnly)){
-            QTextStream content(&CURRENT_VERSION_TOKEN);
-            currentVersion=content.readLine();
-            CURRENT_VERSION_TOKEN.close();
-        }
-        if (currentVersion!=installedVersion){
-            if (CURRENT_VERSION_TOKEN.open(QIODevice::WriteOnly)){
-                QTextStream data(&CURRENT_VERSION_TOKEN);
-                data<<installedVersion;
-                CURRENT_VERSION_TOKEN.close();
-                clear=true;
-            }
-        }
-    } 
-    if (clear){
-        if (cacheDir.exists()){
-            cacheDir.removeRecursively();
-        }
-    }   
-
-}
-
-QString BellSchedulerIndicatorUtils::getInstalledVersion(){
-
-    QFile INSTALLED_VERSION_TOKEN;
-    QString installedVersion="";
-    
-    INSTALLED_VERSION_TOKEN.setFileName("/var/lib/bell-scheduler-indicator/version");
-
-    if (INSTALLED_VERSION_TOKEN.exists()){
-        if (INSTALLED_VERSION_TOKEN.open(QIODevice::ReadOnly)){
-            QTextStream content(&INSTALLED_VERSION_TOKEN);
-            installedVersion=content.readLine();
-            INSTALLED_VERSION_TOKEN.close();
-        }
-    }
-    return installedVersion;
-
 }
 
 void BellSchedulerIndicatorUtils::readBellToken(){
@@ -262,7 +202,8 @@ void BellSchedulerIndicatorUtils::stopBell(){
         }
         safeThis->readToken();
         try{
-            safeThis->client.call("BellSchedulerManager","stop_bell");
+            n4d::Client client=n4d::Client("https://127.0.0.1:9779");
+            client.call("BellSchedulerManager","stop_bell");
         }catch(std::exception&e){
             qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell. Error: "<<e.what();
         }
