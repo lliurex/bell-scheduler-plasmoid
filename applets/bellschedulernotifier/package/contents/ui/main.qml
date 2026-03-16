@@ -28,7 +28,7 @@ PlasmoidItem {
                 return PlasmaCore.Types.ActiveStatus
             case BellSchedulerIndicator.PassiveStatus:
                 return PlasmaCore.Types.PassiveStatus
- 	    case BellSchedulerIndicator.HiddenStatus:
+            case BellSchedulerIndicator.HiddenStatus:
                 return PlasmaCore.Types.HiddenStatus
            
         }
