@@ -13,6 +13,7 @@
 #include <QJsonObject>
 
 #include <variant.hpp>
+#include <QtQml/qqmlregistration.h>
 
 #include "BellSchedulerIndicatorUtils.h"
 
@@ -24,16 +25,8 @@ class AsyncDbus;
 class BellSchedulerIndicator : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
-
-    Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
-    Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)
-    Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
-    Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
-    Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
-    Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
-    Q_PROPERTY (bool canStopBell READ canStopBell NOTIFY canStopBellChanged)
-    Q_ENUMS(TrayStatus)
 
 public:
     /**
@@ -41,10 +34,19 @@ public:
      */
     enum TrayStatus {
         ActiveStatus=0,
-        PassiveStatus
+        PassiveStatus,
+	HiddenStatus
     };
+    Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)
+    Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
+    Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
+    Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
+    Q_PROPERTY (bool canStopBell READ canStopBell NOTIFY canStopBellChanged)
+    Q_ENUM(TrayStatus)
 
-    BellSchedulerIndicator(QObject *parent = nullptr);
+    explicit BellSchedulerIndicator(QObject *parent = nullptr);
 
     TrayStatus status() const;
     void changeTryIconState (int state);

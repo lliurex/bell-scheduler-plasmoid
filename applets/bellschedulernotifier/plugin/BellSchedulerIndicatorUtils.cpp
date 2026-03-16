@@ -45,7 +45,7 @@ void BellSchedulerIndicatorUtils::startWidget(){
         bool initWorker=false;
 
         try{
-            safeThis->cleanCache();
+            /*safeThis->cleanCache();*/
             safeThis->client=n4d::Client("https://127.0.0.1:9779");
             if (!QFileInfo::exists(safeThis->refPath)){
                 QDir basePath("/tmp/");

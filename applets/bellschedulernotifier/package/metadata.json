@@ -1,6 +1,7 @@
 {
     "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
+        "Version":"2.1.0",
         "Authors": [
             {
                 "Email": "juapesai@hotmail.com",
@@ -25,5 +26,13 @@
         "Website": "https://lliurex.net/"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
-    "X-Plasma-NotificationAreaCategory": "SystemServices"
+    "X-Plasma-NotificationAreaCategory": "SystemServices",
+    "Dependencies":[
+        {
+            "type":"qml",
+            "identifier": "org.kde.plasma.private.bellschedulernotifier",
+            "version":"2.1"
+        }
+    ]
+
 }

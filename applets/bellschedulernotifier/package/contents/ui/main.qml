@@ -8,7 +8,7 @@ import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kirigami as Kirigami
 
-import org.kde.plasma.private.bellschedulernotifier 1.0
+import org.kde.plasma.private.bellschedulernotifier
 // Item - the most basic plasmoid component, an empty container.
 
 PlasmoidItem {
@@ -28,6 +28,8 @@ PlasmoidItem {
                 return PlasmaCore.Types.ActiveStatus
             case BellSchedulerIndicator.PassiveStatus:
                 return PlasmaCore.Types.PassiveStatus
+ 	    case BellSchedulerIndicator.HiddenStatus:
+                return PlasmaCore.Types.HiddenStatus
            
         }
         return  PlasmaCore.Types.ActiveStatus

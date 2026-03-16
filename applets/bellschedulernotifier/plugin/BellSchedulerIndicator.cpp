@@ -24,21 +24,24 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
 {
 
     TARGET_FILE.setFile(m_utils->tokenPath);
-    QString titleInitHead=i18n("No bell was played");
-    setSubToolTip(titleInitHead);
-    setPlaceHolderText(titleInitHead);
     connect(m_utils,&BellSchedulerIndicatorUtils::startWidgetFinished,this,&BellSchedulerIndicator::handleStartFinished);
     connect(m_utils,&BellSchedulerIndicatorUtils::readBellTokenFinished,this,&BellSchedulerIndicator::handleBellTokenFinished);
     connect(m_utils,&BellSchedulerIndicatorUtils::getRunningBellsFinished,this,&BellSchedulerIndicator::handleGetRunningBellsFinished);
     connect(m_utils,&BellSchedulerIndicatorUtils::requestCloseNotification,this,&BellSchedulerIndicator::showNotification);
     connect(m_utils,&BellSchedulerIndicatorUtils::stopBellFinished,this,&BellSchedulerIndicator::handleStopBellFinished);
-    m_utils->startWidget();
+    
+    QTimer::singleShot(0,this,[this](){
+    	m_utils->startWidget();
+    });
 
 } 
 
 void BellSchedulerIndicator::handleStartFinished(bool startOk, bool initWorker){
 
     if (startOk){
+    	titleStartHead=i18n("No bell was played");
+    	setSubToolTip(titleStartHead);
+    	setPlaceHolderText(titleStartHead);
 	    QDir TARGET_DIR(m_utils->refPath);
 		watcher=new QFileSystemWatcher(this);
 		connect(watcher,&QFileSystemWatcher::directoryChanged,this,&BellSchedulerIndicator::worker);
@@ -48,7 +51,7 @@ void BellSchedulerIndicator::handleStartFinished(bool startOk, bool initWorker){
 			worker();
 		}
 	}else{
-		changeTryIconState(1);
+		setStatus(HiddenStatus);
 	}
 
 }
