@@ -27,7 +27,6 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
     : QObject(parent)
        
 {
-    user=qgetenv("USER");
   
 } 
 
@@ -46,7 +45,7 @@ void BellSchedulerIndicatorUtils::startWidget(){
         bool initWorker=false;
 
         try{
-            if (!QFileInfo::exists(safeThis->tmpPath)){
+            if (!QFileInfo::exists(tmpPath)){
                 QDir basePath("/tmp/");
                 basePath.mkdir(".BellScheduler");
             }else{
