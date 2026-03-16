@@ -1,3 +1,10 @@
+bell-scheduler-indicator (0.17.4) jammy; urgency=medium
+
+  * Changed method to get get bell info: read bell token instead n4d call
+  * Changed other functions to improve startup and overall performance
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 16 Mar 2026 15:19:18 +0100
+
 bell-scheduler-indicator (0.17.3) jammy; urgency=medium
 
   * Fixed import in qml file
