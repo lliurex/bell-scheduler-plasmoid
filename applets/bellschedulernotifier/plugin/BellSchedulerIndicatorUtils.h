@@ -41,13 +41,10 @@ public:
 
 private:    
      
-   QString user;
    n4d::Client client;
     
    QProcess *m_process = nullptr;
     
-   void cleanCache();
-   QString getInstalledVersion();
    void readToken();
    string  getFormatHour(int hour,int minute);
      

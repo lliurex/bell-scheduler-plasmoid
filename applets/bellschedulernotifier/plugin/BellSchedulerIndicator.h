@@ -39,7 +39,8 @@ public:
      */
     enum TrayStatus {
         ActiveStatus=0,
-        PassiveStatus
+        PassiveStatus,
+        HiddenStatus
     };
 
     BellSchedulerIndicator(QObject *parent = nullptr);
