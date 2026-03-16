@@ -9,8 +9,11 @@
 #include <QFile>
 #include <QThread>
 #include <QFileSystemWatcher>
+#include <QList>
+#include <QJsonObject>
 
 #include <variant.hpp>
+#include <QtQml/qqmlregistration.h>
 
 #include "BellSchedulerIndicatorUtils.h"
 
@@ -22,16 +25,8 @@ class AsyncDbus;
 class BellSchedulerIndicator : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
-
-    Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
-    Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)
-    Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
-    Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
-    Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
-    Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
-    Q_PROPERTY (bool canStopBell READ canStopBell NOTIFY canStopBellChanged)
-    Q_ENUMS(TrayStatus)
 
 public:
     /**
@@ -39,10 +34,19 @@ public:
      */
     enum TrayStatus {
         ActiveStatus=0,
-        PassiveStatus
+        PassiveStatus,
+	    HiddenStatus
     };
+    Q_PROPERTY(TrayStatus status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString toolTip READ toolTip NOTIFY toolTipChanged)
+    Q_PROPERTY(QString subToolTip READ subToolTip NOTIFY subToolTipChanged)
+    Q_PROPERTY(QString placeHolderText READ placeHolderText NOTIFY placeHolderTextChanged)
+    Q_PROPERTY(QString placeHolderExplanation READ placeHolderExplanation NOTIFY placeHolderExplanationChanged)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
+    Q_PROPERTY (bool canStopBell READ canStopBell NOTIFY canStopBellChanged)
+    Q_ENUM(TrayStatus)
 
-    BellSchedulerIndicator(QObject *parent = nullptr);
+    explicit BellSchedulerIndicator(QObject *parent = nullptr);
 
     TrayStatus status() const;
     void changeTryIconState (int state);
@@ -89,11 +93,8 @@ private:
 
     void initWatcher();
     void getBellInfo();
-    void checkStatus();
-    bool areBellsLive();
-    void linkBellPid();
-    void showNotification(QString notType, int index);
-    void setNotificationBody(int bellId,QString action);
+    void checkRunningBells();
+    void setNotificationBody(QString bellId,QString action);
     void setWarningSubToolTip();
 
     QTimer *m_timer_run=nullptr;
@@ -111,18 +112,26 @@ private:
     QString notificationStartBody;
     QString placeHolderExplanationStart;
     QString notificationEndBody;
-    QFile TARGET_FILE;
-    bool is_working=false;
+    QFileInfo TARGET_FILE;
+    bool isAliveWorking=false;
+    bool isWorking=false;
     bool bellToken=false;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
     int runningBells=0;
     bool multipleBellsPlayed=false;
     QFileSystemWatcher *watcher = nullptr;
-    QString refPath="/tmp/.BellScheduler";
-    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
-     
+    bool stopBellLaunched=false;
+
+    private slots:
+    
+    void handleStartFinished(bool startOk, bool initWorker);
+    void handleBellTokenFinished();
+    void handleGetRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
+    void showNotification(QString notType, QString bellId);
+    void handleStopBellFinished();
+ 
 };
 
 
-#endif // PLASMA_LLIUREX_DISK_QUOTA_H
+#endif // PLASMA_BELL_SCHEDULER_INDICATOR_H
