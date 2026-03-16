@@ -23,6 +23,19 @@ case "$1" in
         newVersion=$(dpkg-query --showformat='${Version}' --show bell-scheduler-indicator)
         tokenDir=/var/lib/bell-scheduler-indicator/version
         echo "$newVersion" > "$tokenDir" || true
+
+        QML_FILE="/usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/contents/ui/main.qml"
+
+        if [ -f "$QML_FILE" ];then
+            touch /usr/share/plasma/plasmoids/org.kde.plasma.bellschedulernotifier/contents/ui/main.qml || true
+        fi
+        QML_DIR="/usr/lib/x86_64-linux-gnu/qt5/qml/org/kde/plasma/private/bellschedulernotifier"
+
+        if [ -d "$QML_DIR" ];then
+            touch "$QML_DIR"/* || true
+            touch "$QML_DIR" || true
+        fi
+        kbuildsycoca6 --noincremental > /dev/null 2>&1 || true
    
     ;;
 
