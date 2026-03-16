@@ -23,7 +23,6 @@ X-KDE-PluginInfo-Version=2.0
 X-KDE-PluginInfo-Depends=org.kde.plasma.private.bellschedulernotifier
 X-KDE-PluginInfo-Website=http://lliurex.net
 X-KDE-PluginInfo-Category=Utilities
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=LGPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-Plasma-StandAloneApp=true
