@@ -4,9 +4,8 @@
 #include <QObject>
 #include <QProcess>
 #include <QFile>
-
+#include <QMap>
 #include <n4d.hpp>
-#include <variant.hpp>
 
 using namespace std;
 using namespace edupals;
@@ -22,28 +21,30 @@ public:
 
    BellSchedulerIndicatorUtils(QObject *parent = nullptr);
 
-   void getBellInfo();
-   void linkBellPid();
-   void stopBell();
-   std::tuple<bool, QStringList> areBellsLive();
-   QStringList getBellData(int bellId);
+   QString refPath="/tmp/.BellScheduler";
+   QString tokenPath="/tmp/.BellScheduler/newbellscheduler-token";
+   QMap<QString, QVariantMap> bellsInfo;
 
-   QStringList bellsId;
-   variant::Variant bellsInfo =variant::Variant::create_array(0);
+   void startWidget();
+   void readBellToken();
+   void getRunningBells();   
+   void syncBellInfo(QList<QJsonObject> pidInfo, QStringList bellsPid);
+   void stopBell();
+   QStringList getBellData(QString bellId);
+
+  signals:
+      void startWidgetFinished(bool startOk,bool initWorker);
+      void readBellTokenFinished();
+      void getRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
+      void requestCloseNotification(QString notType, QString bellId);
+      void stopBellFinished();
 
 private:    
      
-	 variant::Variant readToken();
-    std::tuple<QList<QJsonObject>, QStringList> getBellPid();	
-    string  getFormatHour(int hour,int minute);
-    n4d::Client client;
-    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
-    qint64 MOD_FRECUENCY=2000;
-    QStringList bellPid;
+   QProcess *m_process = nullptr;
     
+   void readToken();
      
 };
 
-
-
-#endif // PLASMA_LLIUREX_UP_INDICATOR_UTILS_H
+#endif // PLASMA_BELL_SCHEDULER_INDICATOR_UTILS

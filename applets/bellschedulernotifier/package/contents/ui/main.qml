@@ -7,7 +7,7 @@ import org.kde.plasma.core 2.1 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
-import org.kde.plasma.private.bellschedulernotifier 1.0
+import org.kde.plasma.private.bellschedulernotifier 2.0
 // Item - the most basic plasmoid component, an empty container.
 Item {
 
@@ -26,7 +26,8 @@ Item {
                 return PlasmaCore.Types.ActiveStatus
             case BellSchedulerIndicator.PassiveStatus:
                 return PlasmaCore.Types.PassiveStatus
-           
+           case BellSchedulerIndicator.HiddenStatus:
+                return PlasmaCore.Types.HiddenStatus
         }
         return  PlasmaCore.Types.ActiveStatus
         
@@ -56,8 +57,8 @@ Item {
             anchors.centerIn: parent
             width: parent.width - (PlasmaCore.Units.gridUnit * 4)
             iconName: Plasmoid.icon
-            text:bellSchedulerIndicator.placeHolderText
-            explanation:bellSchedulerIndicator.placeHolderExplanation
+            text:bellSchedulerIndicator.placeHolderText+"\n"+bellSchedulerIndicator.placeHolderExplanation
+            /*explanation:bellSchedulerIndicator.placeHolderExplanation*/
         }
         PlasmaComponents3.Button {
             height:35

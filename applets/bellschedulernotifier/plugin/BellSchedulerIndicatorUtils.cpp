@@ -9,14 +9,15 @@
 #include <QTextStream>
 #include <QJsonObject>
 #include <QList>
+#include <QPointer>
+
+
+#include <QtConcurrent>
 
 #include <n4d.hpp>
-#include <variant.hpp>
-#include <json.hpp>
 
 #include <tuple>
 #include <sys/types.h>
-#include <QDebug>
 
 using namespace edupals;
 using namespace std;
@@ -26,283 +27,216 @@ BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
     : QObject(parent)
        
 {
-    n4d::Client client;
-    client=n4d::Client("https://127.0.0.1:9779");
   
-}    
+} 
 
-string BellSchedulerIndicatorUtils::getFormatHour(int hour,int minute){
+void BellSchedulerIndicatorUtils::startWidget(){
 
-    std::stringstream shour;
-    shour<<hour;
-    std::stringstream sminute;
-    sminute<<minute;
-    string format_hour="";
-    string format_minute="";
-  
-    if (hour<10){
-        format_hour='0'+shour.str();
-    }else{
-        format_hour=shour.str();
+    QString tmpPath=this->refPath;
+    QPointer<BellSchedulerIndicatorUtils>safeThis(this);
 
-    }
-
-    if (minute<10){
-        format_minute='0'+sminute.str();
-    }else{
-        format_minute=sminute.str();
-
-    }
-
-   string format_time=format_hour+":"+format_minute;
-   
-   return format_time;
-
-}
-
-variant::Variant BellSchedulerIndicatorUtils::readToken(){
-
-    bool error=false;
-    variant::Variant tmp =variant::Variant::create_array(0);
- 
-    QFile file(tokenPath);
-
-    file.open(QIODevice::ReadOnly);
-    QString s;
-    QTextStream s1(&file);
- 
-    QString line;
-    QStringList bells_id;
-    while (s1.readLineInto(&line)) {
-        bells_id.push_back(line);
-    } 
-    file.close();
-    
-    try{
-        variant::Variant bell_info = client.call("BellSchedulerManager","read_conf");
-
-       
-        for(int i=0 ; i < bells_id.length() ; i++){
-            try{    
-                variant::Variant info=variant::Variant::create_struct();  
-                string bellId=bells_id[i].toStdString();
-                int hour=bell_info["data"][bellId]["hour"].get_int32();
-                int minute=bell_info["data"][bellId]["minute"].get_int32();
-                string format_hour=getFormatHour(hour,minute);
-                int duration=bell_info["data"][bellId]["play"]["duration"];
-
-                info["bellId"]=bellId;
-                info["name"]=bell_info["data"][bellId]["name"].get_string();
-                info["hour"]=format_hour;
-                info["duration"]=duration;
-                info["bellPID"]="";
-                tmp.append(info);
-
-            }catch(...){
-                error=true;
-
-            }    
-                
+    QtConcurrent::run([safeThis,tmpPath]() {
+        if (!safeThis){
+            return;
         }
-       
-    }catch (...){
-        error=true;
 
-    } 
+        bool startOk=false;
+        bool initWorker=false;
 
-    if (error) {
-        variant::Variant empty =variant::Variant::create_array(0);
-        tmp=empty;
-        for(int i=0 ; i < bells_id.length() ; i++){
-            variant::Variant info=variant::Variant::create_struct();  
-            string bellId=bells_id[i].toStdString();
-            info["bellId"]=bellId;
-            info["name"]="";
-            info["hour"]="";
-            info["duration"]=999;
-            info["bellPID"]="";
-            tmp.append(info);
-        }         
+        try{
+            if (!QFileInfo::exists(tmpPath)){
+                QDir basePath("/tmp/");
+                basePath.mkdir(".BellScheduler");
+            }else{
+                initWorker=true;
+            }
+            startOk=true;
+        }catch (std::exception& e){
+            qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Error creating n4d client: " <<e.what();
+        } 
 
-    }      
-    
-   return tmp;
-
-
-}
-
-void BellSchedulerIndicatorUtils::getBellInfo(){
-
-    variant::Variant token_content = readToken();
-
-    if (bellsInfo.count()>0){
-        for (int i=0;i<bellsInfo.count();i++){
-            if (!bellsId.contains(QString::fromStdString(bellsInfo[i]["bellId"]))){
-                bellsId.push_back(QString::fromStdString(bellsInfo[i]["bellId"]));
-            }    
+        if (safeThis){
+            emit safeThis->startWidgetFinished(startOk,initWorker);
         }
-    } 
-    
-    for (int i=0;i<token_content.count();i++){
-        QString id=QString::fromStdString(token_content[i]["bellId"]);
-        if (!bellsId.contains(id)){
-            bellsInfo.append(token_content[i]);
+
+    });
+}
+void BellSchedulerIndicatorUtils::readBellToken(){
+
+    QPointer<BellSchedulerIndicatorUtils>safeThis(this);
+
+    QtConcurrent::run([safeThis]() {
+
+        if (!safeThis){
+            return;
+        }
+        safeThis->readToken();
+        if (safeThis){
+            emit safeThis->readBellTokenFinished();
+        }
+    });
+
+} 
+
+void BellSchedulerIndicatorUtils::readToken(){
+
+    qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Read Token";
+
+    QFile tokenFile(tokenPath);
+
+    if (tokenFile.exists() && tokenFile.open(QIODevice::ReadOnly)) {
+        QTextStream content(&tokenFile);
+        
+        while (!content.atEnd()) {
+            QString tmpLine = content.readLine().trimmed();
             
-        }   
-    } 
-
-}
-
-std::tuple<QList<QJsonObject>, QStringList> BellSchedulerIndicatorUtils::getBellPid(){
-
-    QStringList bellPid;
-    QList<QJsonObject>pidInfo;
-
-    QProcess process;
-    QString cmd="ps -ef | grep '/usr/bin/BellSchedulerPlayer' | grep -v 'grep'";
-    
-    process.start("/bin/sh", QStringList()<< "-c" 
-                       << cmd);
-    process.waitForFinished(-1);
-    QString stdout=process.readAllStandardOutput();
-    QString stderr=process.readAllStandardError();
-    QStringList lst=stdout.split("\n");
-
-    if (lst.length()>0){
-        for (int i=0;i<lst.length();i++){
-            QStringList tmp_list;
-            QJsonObject tmp_pid{
-                {"bellId",""},
-                {"pidParent",""},
-                {"bellPID",""}
-            };
-            int cont=0;
-            QStringList processed_line=lst[i].split(" ");
-            if (processed_line.length()>=10){
-                for (int i=0;i<processed_line.length();i++){
-                    if (processed_line[i].compare("")!=0){
-                        tmp_list.push_back(processed_line[i]);
-                    }
-                }    
-                processed_line=tmp_list;
-                tmp_pid["bellId"]=processed_line[9];
-                tmp_pid["pidParent"]=processed_line[2];
-                tmp_pid["bellPID"]=processed_line[1];
-                if (pidInfo.length()>0){
-                    for (int i=0;i<pidInfo.length();i++){
-                        if (pidInfo[i]["bellId"]==tmp_pid["bellId"]){
-                            cont=cont+1;
+            if (!tmpLine.isEmpty()) {
+                QStringList tmpBell = tmpLine.split("###");
+                QString bellId = tmpBell[0];
+                if (!bellId.isEmpty()){
+                   if (!bellsInfo.contains(bellId)) {
+                        QVariantMap info;
+                        if (tmpBell.size() == 4) {
+                            info["name"] = tmpBell[1];
+                            info["hour"] = tmpBell[2];
+                            info["duration"] = tmpBell[3].toInt();
+                            info["bellPID"] = "";
+                        }else{
+                            info["name"] = "";
+                            info["hour"] = "";
+                            info["duration"] = 999;
+                            info["bellPID"] = "";
                         }
+                        bellsInfo.insert(bellId, info);
                     }
                 }
-                if (cont==0){
-                    pidInfo.append(tmp_pid);
-                }
-                if (!bellPid.contains(processed_line[1])){
-                    bellPid.append(processed_line[1]);
-
-                } 
-
-               
-          }
-        }
-    }    
-    
-    return {pidInfo,bellPid};
-
-}
-
-std::tuple<bool,QStringList> BellSchedulerIndicatorUtils::areBellsLive(){
-
-   auto[pidInfo,bellPid]=getBellPid();
-
-   bool bellsLive=false;
-   QStringList removeBells;
-
-   if (bellPid.size()>0){
-        bellsLive=true;
-        for (int i=0;i<bellsInfo.count();i++){
-            QString bellPID=QString::fromStdString(bellsInfo[i]["bellPID"]);
-            if (bellPID!=""){
-                if (!bellPid.contains(bellPID)){
-                    removeBells.push_back(QString::fromStdString(bellsInfo[i]["bellId"]));
-                } 
             }
-
         }
-    }    
-    
-    return {bellsLive,removeBells};    
-
+        tokenFile.close();
+    }
 }
 
-void BellSchedulerIndicatorUtils::linkBellPid(){
+void BellSchedulerIndicatorUtils::getRunningBells(){
 
-    int cont=0;
-    auto[pidInfo,bellPid]=getBellPid();
-
-    for (int i=0;i<bellsInfo.count();i++){
-       QString bellPID=QString::fromStdString(bellsInfo[i]["bellPID"]);
-       if (bellPID==""){
-            cont=cont+1;
-       }
+    if (m_process && m_process->state() != QProcess::NotRunning) {
+        return;
     }
 
-    if (cont>0){
-        for (int i=0; i<pidInfo.size();i++){
-            for (int j=0;j<bellsInfo.count();j++){
-                QString bellID=QString::fromStdString(bellsInfo[j]["bellId"]);
-                QString bellID2=pidInfo[i]["bellId"].toString();
-                if (bellID.compare(bellID2)==0){
-                    QString bellPID=pidInfo[i]["bellPID"].toString();
-                    bellsInfo[j]["bellPID"]=bellPID.toStdString();
+    if (!m_process) {
+        m_process = new QProcess(this);
+    }
+    m_process->disconnect();
+    connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
+
+        QList<QJsonObject> pidInfo;
+        QStringList bellsPid;
+
+        if (exitStatus == QProcess::NormalExit) {
+            QString output = m_process->readAllStandardOutput();
+            QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+
+            for (const QString &line : lines) {
+                QStringList parts = line.split(' ', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString bPID = parts[0];
+                    QString bID = parts.last();
+
+                    bool exists = std::any_of(pidInfo.begin(), pidInfo.end(), [&](const QJsonObject &obj){
+                        return obj["bellId"].toString() == bID;
+                    });
+                    if (!exists) {
+                        pidInfo.append(QJsonObject{{"bellId", bID}, {"bellPID", bPID}});
+                    }
+                    if (!bellsPid.contains(bPID)) bellsPid.append(bPID);
                 }
-
-            }
-            
+            }   
         }
+        emit getRunningBellsFinished(pidInfo, bellsPid);
+        m_process->deleteLater();
+        m_process=nullptr;
+    });
 
+    m_process->start("pgrep", QStringList() << "-fa" << "BellSchedulerPlayer");
+}
+
+void BellSchedulerIndicatorUtils::syncBellInfo(QList<QJsonObject> pidInfo, QStringList bellsPid){
+
+   for (const QJsonObject &obj : pidInfo) {
+        QString bID = obj["bellId"].toString();
+        QString bPID = obj["bellPID"].toString();
+
+        if (bellsInfo.contains(bID)) {
+            bellsInfo[bID]["PID"] = bPID;
+         }   
+    }
+    auto it=bellsInfo.begin();
+    while (it != bellsInfo.end()) {
+        QString bellId = it.key();
+        QVariantMap &bellData = it.value();
+        QString pidInData = bellData.value("PID").toString().trimmed();
+
+        if (!bellsPid.contains(pidInData)) {
+            emit requestCloseNotification("end", bellId);
+            it = bellsInfo.erase(it);
+        } else {
+            ++it;
+        }
     }
 
 }
 
 void BellSchedulerIndicatorUtils::stopBell(){
 
-    try{
-        client.call("BellSchedulerManager","stop_bell");
-    }catch(...){
-        
-    }
-    
+    qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell";
+
+    QPointer<BellSchedulerIndicatorUtils>safeThis(this);
+
+    QtConcurrent::run([safeThis]() {
+
+        if (!safeThis){
+            return;
+        }
+        safeThis->readToken();
+        try{
+            n4d::Client client=n4d::Client("https://127.0.0.1:9779");
+            client.call("BellSchedulerManager","stop_bell");
+        }catch(std::exception&e){
+            qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell. Error: "<<e.what();
+        }
+        emit safeThis->stopBellFinished();
+    });
+       
 }
 
-QStringList BellSchedulerIndicatorUtils::getBellData(int bellId){
+QStringList BellSchedulerIndicatorUtils::getBellData(QString bellId){
 
-     QStringList bellData;
-     QString hour;
-     QString bell;
-     QString duration;
+    QStringList bellData;
+    QString hour;
+    QString bell;
+    QString duration;
 
-     if (bellsInfo[bellId]["duration"].get_int32()==999){
-        hour="";
-        bell="";
-        duration="error";
-    }else{
-        hour=QString::fromStdString(bellsInfo[bellId]["hour"]);
-        bell=QString::fromStdString(bellsInfo[bellId]["name"]);
-        if (bellsInfo[bellId]["duration"].get_int32()==0){
-            duration="full";
-        }else{
-            QString s = QString::number(bellsInfo[bellId]["duration"].get_int32());
-            duration=s;
+    QVariantMap currentBell = bellsInfo.value(bellId);
+    int durationVal = currentBell["duration"].toInt();
 
-        }   
-
-    } 
+    if (durationVal == 999) {
+        hour = "";
+        bell = "";
+        duration = "error";
+    }else {
+        hour = currentBell["hour"].toString();
+        bell = currentBell["name"].toString();
+    
+        if (durationVal == 0) {
+            duration = "full";
+        }else {
+            duration = QString::number(durationVal);
+        }
+    }
+    
     bellData.append(hour);
     bellData.append(bell);
     bellData.append(duration);
-    bellData.append(QString::number(bellPid.count()));
     
     return bellData;  
 

@@ -39,7 +39,8 @@ public:
      */
     enum TrayStatus {
         ActiveStatus=0,
-        PassiveStatus
+        PassiveStatus,
+        HiddenStatus
     };
 
     BellSchedulerIndicator(QObject *parent = nullptr);
@@ -89,11 +90,8 @@ private:
 
     void initWatcher();
     void getBellInfo();
-    void checkStatus();
-    bool areBellsLive();
-    void linkBellPid();
-    void showNotification(QString notType, int index);
-    void setNotificationBody(int bellId,QString action);
+    void checkRunningBells();
+    void setNotificationBody(QString bellId,QString action);
     void setWarningSubToolTip();
 
     QTimer *m_timer_run=nullptr;
@@ -111,18 +109,26 @@ private:
     QString notificationStartBody;
     QString placeHolderExplanationStart;
     QString notificationEndBody;
-    QFile TARGET_FILE;
-    bool is_working=false;
+    QFileInfo TARGET_FILE;
+    bool isAliveWorking=false;
+    bool isWorking=false;
     bool bellToken=false;
     BellSchedulerIndicatorUtils* m_utils;
     QPointer<KNotification> m_bellPlayingNotification;
     int runningBells=0;
     bool multipleBellsPlayed=false;
     QFileSystemWatcher *watcher = nullptr;
-    QString refPath="/tmp/.BellScheduler";
-    QString tokenPath="/tmp/.BellScheduler/bellscheduler-token";
-     
+    bool stopBellLaunched=false;
+
+    private slots:
+    
+    void handleStartFinished(bool startOk, bool initWorker);
+    void handleBellTokenFinished();
+    void handleGetRunningBellsFinished(QList<QJsonObject> pidInfo, QStringList bellsPid);
+    void showNotification(QString notType, QString bellId);
+    void handleStopBellFinished();
+ 
 };
 
 
-#endif // PLASMA_LLIUREX_DISK_QUOTA_H
+#endif // PLASMA_BELL_SCHEDULER_INDICATOR_H
