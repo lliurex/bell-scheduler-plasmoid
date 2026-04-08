@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.17.7) jammy; urgency=medium
+
+  * Minor changes
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 08 Apr 2026 15:36:33 +0200
+
 bell-scheduler-indicator (0.17.6) jammy; urgency=medium
 
   * Fixed postinstall script
