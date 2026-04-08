@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.27.4) noble; urgency=medium
+
+  * Minor changes
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 08 Apr 2026 16:08:02 +0200
+
 bell-scheduler-indicator (0.27.3) noble; urgency=medium
 
   * Changed method to get bell info: read bell token instead n4d call
