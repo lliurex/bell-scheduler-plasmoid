@@ -29,11 +29,12 @@ BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     connect(m_utils,&BellSchedulerIndicatorUtils::getRunningBellsFinished,this,&BellSchedulerIndicator::handleGetRunningBellsFinished);
     connect(m_utils,&BellSchedulerIndicatorUtils::requestCloseNotification,this,&BellSchedulerIndicator::showNotification);
     connect(m_utils,&BellSchedulerIndicatorUtils::stopBellFinished,this,&BellSchedulerIndicator::handleStopBellFinished);
-    
+    connect(m_timer_run, &QTimer::timeout, this, &BellSchedulerIndicator::checkRunningBells);
+
     QTimer::singleShot(0,this,[this](){
     	m_utils->startWidget();
     });
-
+    
 } 
 
 void BellSchedulerIndicator::handleStartFinished(bool startOk, bool initWorker){
@@ -43,13 +44,17 @@ void BellSchedulerIndicator::handleStartFinished(bool startOk, bool initWorker){
     	setSubToolTip(titleStartHead);
     	setPlaceHolderText(titleStartHead);
 	    QDir TARGET_DIR(m_utils->refPath);
-		watcher=new QFileSystemWatcher(this);
-		connect(watcher,&QFileSystemWatcher::directoryChanged,this,&BellSchedulerIndicator::worker);
-    	connect(watcher,&QFileSystemWatcher::fileChanged,this,&BellSchedulerIndicator::tokenChanged,Qt::UniqueConnection);
-		watcher->addPath(m_utils->refPath);
-		if (initWorker){
-			worker();
-		}
+	    if (!watcher) {
+	    	watcher=new QFileSystemWatcher(this);
+	    	connect(watcher,&QFileSystemWatcher::directoryChanged,this,&BellSchedulerIndicator::worker);
+	    	connect(watcher,&QFileSystemWatcher::fileChanged,this,&BellSchedulerIndicator::tokenChanged,Qt::UniqueConnection);
+	    }
+	    if (!watcher->directories().contains(m_utils->refPath)){
+	    	watcher->addPath(m_utils->refPath);
+	    }
+	    if (initWorker){
+	    	worker();
+	    }
 	}else{
 		setStatus(HiddenStatus);
 	}
@@ -142,7 +147,6 @@ void BellSchedulerIndicator::isAlive(){
 
 	bellToken=false;
 	changeTryIconState(0);
-	connect(m_timer_run, &QTimer::timeout, this, &BellSchedulerIndicator::checkRunningBells);
 	m_timer_run->start(1000);
 	checkRunningBells();
 
