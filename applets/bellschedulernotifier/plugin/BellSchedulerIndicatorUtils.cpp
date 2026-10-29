@@ -23,14 +23,29 @@ using namespace edupals;
 using namespace std;
 
 
-BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils(QObject *parent)
-    : QObject(parent)
-       
+BellSchedulerIndicatorUtils::BellSchedulerIndicatorUtils()
+    : QObject(nullptr)
+    , m_isStarting(false)
+    , m_isInitialized(false)
+    , m_isReadingToken(false)
+    , m_stoppingBell(false)
+   
 {
   
 } 
 
 void BellSchedulerIndicatorUtils::startWidget(){
+
+    if (m_isInitialized){
+        emit startWidgetFinished(true,true);
+        return;
+    }
+
+    if (m_isStarting){
+        return;
+    }
+
+    m_isStarting=true;
 
     QString tmpPath=this->refPath;
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
@@ -56,12 +71,21 @@ void BellSchedulerIndicatorUtils::startWidget(){
         } 
 
         if (safeThis){
+            safeThis->m_isStarting=false;
+            safeThis->m_isInitialized=startOk;
             emit safeThis->startWidgetFinished(startOk,initWorker);
         }
 
     });
 }
+
 void BellSchedulerIndicatorUtils::readBellToken(){
+
+    if (m_isReadingToken){
+        return;
+    }
+
+    m_isReadingToken=true;
 
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
 
@@ -72,6 +96,7 @@ void BellSchedulerIndicatorUtils::readBellToken(){
         }
         safeThis->readToken();
         if (safeThis){
+            safeThis->m_isReadingToken=false;
             emit safeThis->readBellTokenFinished();
         }
     });
@@ -190,6 +215,12 @@ void BellSchedulerIndicatorUtils::stopBell(){
 
     qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell";
 
+    if (m_stoppingBell){
+        return;
+    }
+
+    m_stoppingBell=true;
+
     QPointer<BellSchedulerIndicatorUtils>safeThis(this);
 
     QtConcurrent::run([safeThis]() {
@@ -204,6 +235,7 @@ void BellSchedulerIndicatorUtils::stopBell(){
         }catch(std::exception&e){
             qDebug()<<"[BELL-SCHEDULER-INDICATOR]: Stopping bell. Error: "<<e.what();
         }
+        safeThis->m_stoppingBell=false;
         emit safeThis->stopBellFinished();
     });
        
