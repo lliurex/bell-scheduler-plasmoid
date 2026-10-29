@@ -17,10 +17,16 @@ class BellSchedulerIndicatorUtils : public QObject
 
 
 public:
+
+   static BellSchedulerIndicatorUtils& instance(){
+      static BellSchedulerIndicatorUtils _instance;
+      return _instance;
+   }
+
+   BellSchedulerIndicatorUtils(const BellSchedulerIndicatorUtils&)=delete;
+   BellSchedulerIndicatorUtils& operator=(const BellSchedulerIndicatorUtils&) =delete;
+
    
-
-   BellSchedulerIndicatorUtils(QObject *parent = nullptr);
-
    QString refPath="/tmp/.BellScheduler";
    QString tokenPath="/tmp/.BellScheduler/newbellscheduler-token";
    QMap<QString, QVariantMap> bellsInfo;
@@ -39,8 +45,15 @@ public:
       void requestCloseNotification(QString notType, QString bellId);
       void stopBellFinished();
 
-private:    
-     
+private: 
+
+   explicit BellSchedulerIndicatorUtils();
+
+   bool m_isStarting=false;
+   bool m_isInitialized=false;
+   bool m_isReadingToken=false;
+   bool m_stoppingBell=false;
+
    QProcess *m_process = nullptr;
     
    void readToken();

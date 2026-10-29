@@ -20,7 +20,7 @@ using namespace std;
 BellSchedulerIndicator::BellSchedulerIndicator(QObject *parent)
     : QObject(parent)
     , m_timer_run(new QTimer(this))
-    , m_utils(new BellSchedulerIndicatorUtils(this))
+    , m_utils(&BellSchedulerIndicatorUtils::instance())
     
 {
 
