@@ -1,3 +1,9 @@
+bell-scheduler-indicator (0.17.8) jammy; urgency=medium
+
+  * Improved performance when widget is running in two or more panels
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 29 Oct 2026 09:45:56 +0100
+
 bell-scheduler-indicator (0.17.7) jammy; urgency=medium
 
   * Minor changes
